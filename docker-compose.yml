@@ -1,0 +1,88 @@
+version: '3'
+
+services:
+  # Front-end to entire framework proxy API connections
+  #  and potentially handle load balancing in the future.
+  proxy:
+    build: ./proxy
+    image: maayanlab/signature-commons-proxy
+    networks:
+      default:
+      internal:
+        aliases:
+          - proxy
+          # ensure internal connections to our servers are
+          #  actually sent to this proxy.
+          - amp.pharm.mssm.edu
+    environment:
+      proxy_server_name: localhost
+      proxy_config_00: "/sigcomm/ http://ui:80/sigcomm/"
+      proxy_config_03: "/signature-commons-metadata-api/ http://metadata-api:3000/signature-commons-metadata-api/"
+      proxy_config_04: "/enrichmentapi/ http://data-api:80/enrichmentapi/"
+    ports:
+      - 80:80
+      # - 443:443
+
+  # UI rendering, facilitates integration of metadata and data apis
+  ui:
+    # build: ./ui
+    image: maayanlab/sigcomm
+    networks:
+      internal:
+        aliases:
+          - ui
+  # Metadata API, facilitates json-validatable
+  #  database interactions with metadata postgresql DB
+  metadata-api:
+    # build: ./metadata-api
+    image: maayanlab/signature-commons-metadata-api
+    networks:
+      internal:
+        aliases:
+          - metadata-api
+    environment:
+      ADMIN_PASSWORD: admin
+      ADMIN_USERNAME: admin
+      POSTGRESQL_URL: postgresql://admin:admin@metadata-db:5432/sigcomm
+  # Data API, facilitates efficient data-level analysis
+  data-api:
+    # build: ./data
+    image: nginx
+    # image: maayanlab/enrichmentapi
+    networks:
+      internal:
+        aliases:
+          - data-api
+    environment:
+      dbuser: admin
+      dbpass: admin
+      dbport: 3306
+      dbname: datadb
+      dbserver: data-db
+      deployment: marathon_deployed
+
+  # NOTE: If databases are stored elsewhere, they just need to be
+  #  configured via the environment variables and commented out in this file.
+  # Metadata database, underlying store of metadata
+  metadata-db:
+    build: ./metadata-db
+    # image: postgres
+    image: maayanlab/metadata-db
+    networks:
+      internal:
+        aliases:
+          - metadata-db
+    environment:
+      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: admin
+      POSTGRES_DB: sigcomm
+    volumes:
+      - metadata-db:/var/lib/postgresql/data
+
+# Internal volumes
+volumes:
+  metadata-db:
+
+# Internal docker networks
+networks:
+  internal:
