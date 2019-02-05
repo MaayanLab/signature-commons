@@ -11,12 +11,9 @@ services:
       internal:
         aliases:
           - proxy
-          # ensure internal connections to our servers are
-          #  actually sent to this proxy.
-          - amp.pharm.mssm.edu
     environment:
       proxy_server_name: localhost
-      proxy_config_00: "/sigcomm/ http://ui:80/sigcomm/"
+      proxy_config_00: "/sigcom/ http://ui:80/sigcom/"
       proxy_config_03: "/signature-commons-metadata-api/ http://metadata-api:3000/signature-commons-metadata-api/"
       proxy_config_04: "/enrichmentapi/ http://data-api:80/enrichmentapi/"
     ports:
@@ -26,7 +23,7 @@ services:
   # UI rendering, facilitates integration of metadata and data apis
   ui:
     # build: ./ui
-    image: maayanlab/sigcomm
+    image: maayanlab/sigcom
     networks:
       internal:
         aliases:
@@ -41,9 +38,9 @@ services:
         aliases:
           - metadata-api
     environment:
-      ADMIN_PASSWORD: admin
-      ADMIN_USERNAME: admin
-      POSTGRESQL_URL: postgresql://admin:admin@metadata-db:5432/sigcomm
+      ADMIN_PASSWORD: sigmaster
+      ADMIN_USERNAME: sigmaster
+      POSTGRESQL_URL: postgresql://sigmaster:sigmaster@metadata-db:5432/signaturestore
   # Data API, facilitates efficient data-level analysis
   data-api:
     # build: ./data
@@ -73,9 +70,8 @@ services:
         aliases:
           - metadata-db
     environment:
-      POSTGRES_PASSWORD: admin
-      POSTGRES_USER: admin
-      POSTGRES_DB: sigcomm
+      POSTGRES_PASSWORD: sigmaster
+      POSTGRES_USER: sigmaster
     volumes:
       - metadata-db:/var/lib/postgresql/data
 
