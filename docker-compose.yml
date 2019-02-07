@@ -12,10 +12,10 @@ services:
         aliases:
           - proxy
     environment:
-      proxy_server_name: localhost
-      proxy_config_00: "/sigcom/ http://ui:80/sigcom/"
-      proxy_config_03: "/signature-commons-metadata-api/ http://metadata-api:3000/signature-commons-metadata-api/"
-      proxy_config_04: "/enrichmentapi/ http://data-api:80/enrichmentapi/"
+      nginx_server_name: localhost
+      nginx_proxy_00: "/sigcom/ http://ui:80/sigcom/"
+      nginx_proxy_03: "/signature-commons-metadata-api/ http://metadata-api:3000/signature-commons-metadata-api/"
+      nginx_proxy_04: "/enrichmentapi/ http://data-api:80/enrichmentapi/"
     ports:
       - 80:80
       # - 443:443
