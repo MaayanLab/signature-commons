@@ -16,13 +16,8 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: signaturestore; Type: DATABASE; Schema: -; Owner: sigmaster
+-- Name: signaturestore; Type: DATABASE; Schema: -; Owner: signaturestore
 --
-
-CREATE DATABASE signaturestore WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'en_US.UTF-8' LC_CTYPE = 'en_US.UTF-8';
-
-
-ALTER DATABASE signaturestore OWNER TO sigmaster;
 
 \connect signaturestore
 
@@ -41,7 +36,7 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: entities; Type: TABLE; Schema: public; Owner: sigmaster
+-- Name: entities; Type: TABLE; Schema: public; Owner: signaturestore
 --
 
 CREATE TABLE public.entities (
@@ -51,10 +46,10 @@ CREATE TABLE public.entities (
 );
 
 
-ALTER TABLE public.entities OWNER TO sigmaster;
+ALTER TABLE public.entities OWNER TO signaturestore;
 
 --
--- Name: entities_id_seq; Type: SEQUENCE; Schema: public; Owner: sigmaster
+-- Name: entities_id_seq; Type: SEQUENCE; Schema: public; Owner: signaturestore
 --
 
 CREATE SEQUENCE public.entities_id_seq
@@ -66,17 +61,17 @@ CREATE SEQUENCE public.entities_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.entities_id_seq OWNER TO sigmaster;
+ALTER TABLE public.entities_id_seq OWNER TO signaturestore;
 
 --
--- Name: entities_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sigmaster
+-- Name: entities_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: signaturestore
 --
 
 ALTER SEQUENCE public.entities_id_seq OWNED BY public.entities.id;
 
 
 --
--- Name: libraries; Type: TABLE; Schema: public; Owner: sigmaster
+-- Name: libraries; Type: TABLE; Schema: public; Owner: signaturestore
 --
 
 CREATE TABLE public.libraries (
@@ -84,14 +79,14 @@ CREATE TABLE public.libraries (
     uuid uuid NOT NULL,
     meta jsonb,
     dataset character varying NOT NULL,
-    "signature-keys" jsonb
+    "signature_keys" jsonb
 );
 
 
-ALTER TABLE public.libraries OWNER TO sigmaster;
+ALTER TABLE public.libraries OWNER TO signaturestore;
 
 --
--- Name: libraries_id_seq; Type: SEQUENCE; Schema: public; Owner: sigmaster
+-- Name: libraries_id_seq; Type: SEQUENCE; Schema: public; Owner: signaturestore
 --
 
 CREATE SEQUENCE public.libraries_id_seq
@@ -103,17 +98,17 @@ CREATE SEQUENCE public.libraries_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.libraries_id_seq OWNER TO sigmaster;
+ALTER TABLE public.libraries_id_seq OWNER TO signaturestore;
 
 --
--- Name: libraries_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sigmaster
+-- Name: libraries_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: signaturestore
 --
 
 ALTER SEQUENCE public.libraries_id_seq OWNED BY public.libraries.id;
 
 
 --
--- Name: signatures; Type: TABLE; Schema: public; Owner: sigmaster
+-- Name: signatures; Type: TABLE; Schema: public; Owner: signaturestore
 --
 
 CREATE TABLE public.signatures (
@@ -125,10 +120,10 @@ CREATE TABLE public.signatures (
 );
 
 
-ALTER TABLE public.signatures OWNER TO sigmaster;
+ALTER TABLE public.signatures OWNER TO signaturestore;
 
 --
--- Name: signatures_id_seq; Type: SEQUENCE; Schema: public; Owner: sigmaster
+-- Name: signatures_id_seq; Type: SEQUENCE; Schema: public; Owner: signaturestore
 --
 
 CREATE SEQUENCE public.signatures_id_seq
@@ -140,38 +135,38 @@ CREATE SEQUENCE public.signatures_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.signatures_id_seq OWNER TO sigmaster;
+ALTER TABLE public.signatures_id_seq OWNER TO signaturestore;
 
 --
--- Name: signatures_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: sigmaster
+-- Name: signatures_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: signaturestore
 --
 
 ALTER SEQUENCE public.signatures_id_seq OWNED BY public.signatures.id;
 
 
 --
--- Name: entities id; Type: DEFAULT; Schema: public; Owner: sigmaster
+-- Name: entities id; Type: DEFAULT; Schema: public; Owner: signaturestore
 --
 
 ALTER TABLE ONLY public.entities ALTER COLUMN id SET DEFAULT nextval('public.entities_id_seq'::regclass);
 
 
 --
--- Name: libraries id; Type: DEFAULT; Schema: public; Owner: sigmaster
+-- Name: libraries id; Type: DEFAULT; Schema: public; Owner: signaturestore
 --
 
 ALTER TABLE ONLY public.libraries ALTER COLUMN id SET DEFAULT nextval('public.libraries_id_seq'::regclass);
 
 
 --
--- Name: signatures id; Type: DEFAULT; Schema: public; Owner: sigmaster
+-- Name: signatures id; Type: DEFAULT; Schema: public; Owner: signaturestore
 --
 
 ALTER TABLE ONLY public.signatures ALTER COLUMN id SET DEFAULT nextval('public.signatures_id_seq'::regclass);
 
 
 --
--- Name: entities entities_pkey; Type: CONSTRAINT; Schema: public; Owner: sigmaster
+-- Name: entities entities_pkey; Type: CONSTRAINT; Schema: public; Owner: signaturestore
 --
 
 ALTER TABLE ONLY public.entities
@@ -179,7 +174,7 @@ ALTER TABLE ONLY public.entities
 
 
 --
--- Name: entities entities_uuid_key; Type: CONSTRAINT; Schema: public; Owner: sigmaster
+-- Name: entities entities_uuid_key; Type: CONSTRAINT; Schema: public; Owner: signaturestore
 --
 
 ALTER TABLE ONLY public.entities
@@ -187,7 +182,7 @@ ALTER TABLE ONLY public.entities
 
 
 --
--- Name: libraries libraries_pkey; Type: CONSTRAINT; Schema: public; Owner: sigmaster
+-- Name: libraries libraries_pkey; Type: CONSTRAINT; Schema: public; Owner: signaturestore
 --
 
 ALTER TABLE ONLY public.libraries
@@ -195,7 +190,7 @@ ALTER TABLE ONLY public.libraries
 
 
 --
--- Name: libraries libraries_uuid_key; Type: CONSTRAINT; Schema: public; Owner: sigmaster
+-- Name: libraries libraries_uuid_key; Type: CONSTRAINT; Schema: public; Owner: signaturestore
 --
 
 ALTER TABLE ONLY public.libraries
@@ -203,7 +198,7 @@ ALTER TABLE ONLY public.libraries
 
 
 --
--- Name: signatures signatures_pkey; Type: CONSTRAINT; Schema: public; Owner: sigmaster
+-- Name: signatures signatures_pkey; Type: CONSTRAINT; Schema: public; Owner: signaturestore
 --
 
 ALTER TABLE ONLY public.signatures
@@ -211,7 +206,7 @@ ALTER TABLE ONLY public.signatures
 
 
 --
--- Name: signatures signatures_uuid_key; Type: CONSTRAINT; Schema: public; Owner: sigmaster
+-- Name: signatures signatures_uuid_key; Type: CONSTRAINT; Schema: public; Owner: signaturestore
 --
 
 ALTER TABLE ONLY public.signatures
@@ -219,70 +214,70 @@ ALTER TABLE ONLY public.signatures
 
 
 --
--- Name: library_resource; Type: INDEX; Schema: public; Owner: sigmaster
+-- Name: library_resource; Type: INDEX; Schema: public; Owner: signaturestore
 --
 
 CREATE INDEX library_resource ON public.libraries USING btree (((meta ->> 'Primary Resource'::text)));
 
 
 --
--- Name: meta_tsvector_idx; Type: INDEX; Schema: public; Owner: sigmaster
+-- Name: meta_tsvector_idx; Type: INDEX; Schema: public; Owner: signaturestore
 --
 
 CREATE INDEX meta_tsvector_idx ON public.signatures USING gin (meta_tsvector);
 
 
 --
--- Name: signature_assay; Type: INDEX; Schema: public; Owner: sigmaster
+-- Name: signature_assay; Type: INDEX; Schema: public; Owner: signaturestore
 --
 
 CREATE INDEX signature_assay ON public.signatures USING btree (((meta ->> 'Assay'::text)));
 
 
 --
--- Name: signature_organism; Type: INDEX; Schema: public; Owner: sigmaster
+-- Name: signature_organism; Type: INDEX; Schema: public; Owner: signaturestore
 --
 
 CREATE INDEX signature_organism ON public.signatures USING btree (((meta ->> 'Organism'::text)));
 
 
 --
--- Name: signature_perturbation; Type: INDEX; Schema: public; Owner: sigmaster
+-- Name: signature_perturbation; Type: INDEX; Schema: public; Owner: signaturestore
 --
 
 CREATE INDEX signature_perturbation ON public.signatures USING btree (((meta ->> 'Perturbation Type'::text)));
 
 
 --
--- Name: signatures_fkey_library; Type: INDEX; Schema: public; Owner: sigmaster
+-- Name: signatures_fkey_library; Type: INDEX; Schema: public; Owner: signaturestore
 --
 
 CREATE INDEX signatures_fkey_library ON public.signatures USING btree (libid);
 
 
 --
--- Name: signatures_to_tsvector_idx; Type: INDEX; Schema: public; Owner: sigmaster
+-- Name: signatures_to_tsvector_idx; Type: INDEX; Schema: public; Owner: signaturestore
 --
 
 CREATE INDEX signatures_to_tsvector_idx ON public.signatures USING gin (to_tsvector('english'::regconfig, (meta)::text));
 
 
 --
--- Name: signatures_to_tsvector_idx1; Type: INDEX; Schema: public; Owner: sigmaster
+-- Name: signatures_to_tsvector_idx1; Type: INDEX; Schema: public; Owner: signaturestore
 --
 
 CREATE INDEX signatures_to_tsvector_idx1 ON public.signatures USING gin (to_tsvector('english'::regconfig, meta));
 
 
 --
--- Name: signatures_to_tsvector_idx2; Type: INDEX; Schema: public; Owner: sigmaster
+-- Name: signatures_to_tsvector_idx2; Type: INDEX; Schema: public; Owner: signaturestore
 --
 
 CREATE INDEX signatures_to_tsvector_idx2 ON public.signatures USING gist (to_tsvector('english'::regconfig, (meta)::text));
 
 
 --
--- Name: signatures signatures_libid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: sigmaster
+-- Name: signatures signatures_libid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: signaturestore
 --
 
 ALTER TABLE ONLY public.signatures
@@ -290,7 +285,7 @@ ALTER TABLE ONLY public.signatures
 
 
 --
--- Name: SCHEMA public; Type: ACL; Schema: -; Owner: sigmaster
+-- Name: SCHEMA public; Type: ACL; Schema: -; Owner: signaturestore
 --
 
 GRANT ALL ON SCHEMA public TO PUBLIC;

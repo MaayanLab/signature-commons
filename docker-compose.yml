@@ -38,9 +38,9 @@ services:
         aliases:
           - metadata-api
     environment:
-      ADMIN_PASSWORD: sigmaster
-      ADMIN_USERNAME: sigmaster
-      POSTGRESQL_URL: postgresql://sigmaster:sigmaster@metadata-db:5432/signaturestore
+      ADMIN_PASSWORD: signaturestore
+      ADMIN_USERNAME: signaturestore
+      POSTGRESQL_URL: postgresql://signaturestore:signaturestore@metadata-db:5432/signaturestore
   # Data API, facilitates efficient data-level analysis
   data-api:
     # build: ./data
@@ -68,8 +68,8 @@ services:
         aliases:
           - metadata-db
     environment:
-      POSTGRES_PASSWORD: sigmaster
-      POSTGRES_USER: sigmaster
+      POSTGRES_PASSWORD: signaturestore
+      POSTGRES_USER: signaturestore
     volumes:
       - metadata-db:/var/lib/postgresql/data
 
