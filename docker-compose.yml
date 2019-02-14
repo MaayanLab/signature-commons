@@ -15,7 +15,7 @@ services:
       nginx_server_name: localhost
       nginx_proxy_00: "/sigcom/ http://ui:80/sigcom/"
       nginx_proxy_03: "/signature-commons-metadata-api/ http://metadata-api:3000/signature-commons-metadata-api/"
-      nginx_proxy_04: "/enrichmentapi/ http://data-api:80/enrichmentapi/"
+      nginx_proxy_04: "/enrichmentapi/ http://data-api:8080/enrichmentapi/"
     ports:
       - 80:80
       # - 443:443
@@ -44,8 +44,7 @@ services:
   # Data API, facilitates efficient data-level analysis
   data-api:
     # build: ./data
-    image: nginx
-    # image: maayanlab/enrichmentapi
+    image: maayanlab/enrichmentapi
     networks:
       internal:
         aliases:
@@ -63,7 +62,6 @@ services:
   # Metadata database, underlying store of metadata
   metadata-db:
     build: ./metadata-db
-    # image: postgres
     image: maayanlab/metadata-db
     networks:
       internal:
