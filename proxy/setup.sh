@@ -27,6 +27,9 @@ fi
 
 setup() {
 
+# Remove previous config if exists
+rm /etc/nginx/nginx.conf
+
 # Setup base config
 cat << EOF | tee -a /etc/nginx/nginx.conf >> $log
 user  nginx;
