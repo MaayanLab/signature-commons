@@ -29,7 +29,15 @@ def parse_line(line):
   '''
   return np.array(re.split('[\t,]', re.sub(r'[\r\n]+$', '', line)))
 
-def parse_lines(stream, repository_id=None, library_id=None, meta_client=None, data_client=None, chunks=100, onerror='resolve', verbose=0):
+def transpose_lines(stream):
+  ''' Parse and transpose a stream of lines
+  '''
+  lines = []
+  for line in stream:
+    lines.append(parse_line(line))
+  return np.array(lines).T
+
+def parse_lines(stream, preparsed=False, repository_id=None, library_id=None, meta_client=None, data_client=None, chunks=100, onerror='resolve', verbose=0):
   ''' Streaming parser for the format; sends data to the necessary APIs
   '''
   # We need to parse the top header into memory to construct the entities
@@ -37,9 +45,9 @@ def parse_lines(stream, repository_id=None, library_id=None, meta_client=None, d
   header = []
   for line in stream:
     # Ignore empty starting lines
-    if line.strip() == '':
+    if not preparsed and line.strip() == '':
       continue
-    parsed_line = parse_line(line)
+    parsed_line = line if preparsed else parse_line(line)
     header.append(parsed_line)
     n_na = count_first_na(parsed_line)
     if n_na == 0:
@@ -59,7 +67,7 @@ def parse_lines(stream, repository_id=None, library_id=None, meta_client=None, d
   in_entities = [
     {
       'meta': dict(zip(header_c, header[:border_r, c]), **{
-        "$validator": "/@dcic/signature-commons-schema/core/unknown.json"
+        '$validator': '/@dcic/signature-commons-schema/core/unknown.json'
       })
     }
     for c in range(border_c + 1, n_cols)
@@ -130,12 +138,12 @@ def parse_lines(stream, repository_id=None, library_id=None, meta_client=None, d
   def _generate():
     for r, line in enumerate(stream, border_r + 1):
       # Ignore empty lines
-      if line.strip() == '':
+      if not preparsed and line.strip() == '':
         continue
-      parsed_line = parse_line(line)
+      parsed_line = line if preparsed else parse_line(line)
       # Get metadata
       meta = dict(zip(header_r, parsed_line[:border_c + 1]), **{
-        "$validator": "/@dcic/signature-commons-schema/core/unknown.json"
+        '$validator': '/@dcic/signature-commons-schema/core/unknown.json'
       })
       entities = [
         (entity, parsed_line[c],)
@@ -235,11 +243,21 @@ def pair_to_tsv(pair):
     )
   ])
 
-def ingestion(files=[sys.stdin], repository_id=None, library_id=None, meta_client=None, data_client=None, chunks=100, onerror='resolve', verbose=0):
+def ingestion(files=[sys.stdin], transpose=False, repository_id=None, library_id=None, meta_client=None, data_client=None, chunks=100, onerror='resolve', verbose=0):
   for n, fh in enumerate(files):
     if args.verbose > 0:
       print('processing file {n}...'.format(n=n), file=sys.stderr)
-    parse_lines(fh, repository_id=repository_id, library_id=library_id, meta_client=meta_client, data_client=data_client, chunks=chunks, onerror=onerror, verbose=verbose)
+    parse_lines(
+      transpose_lines(fh) if transpose else fh,
+      transpose=transpose,
+      repository_id=repository_id,
+      library_id=library_id,
+      meta_client=meta_client,
+      data_client=data_client,
+      chunks=chunks,
+      onerror=onerror,
+      verbose=verbose,
+    )
 
 if __name__ == '__main__':
   import argparse
@@ -253,6 +271,12 @@ Row\tLabels\t...\t\t
 R1L1\tR1L2\t...\t0.5\t1.0\t...
 R2L1\tR2L2\t...\t1.0\t0.5\t...
  : \t : \t : \t : \t : \t...
+
+Where Columns are treated as entities (the individual aspects being measured, e.g. genes for gene expression)
+and Rows are treated as signatures (the label of that set of measurements, e.g. drug perturbation)
+
+The -t flag lets you transpose this so that entities are on the rows and measurements on the columns--note
+however that this format does not support stream processing (so it should fit in memory).
 ''',
     formatter_class=argparse.RawTextHelpFormatter
   )
@@ -265,6 +289,8 @@ R2L1\tR2L2\t...\t1.0\t0.5\t...
                       help='signature file(s) to process (`-` for stdin)')
   parser.add_argument('-v', '--verbose', action='count', default=0,
                       help='increase output verbosity')
+  parser.add_argument('-t', '--transpose', action='store', default=False,
+                      help='transpose input to have genes on the row labels and signature definitions on the column labels')
   parser.add_argument('--meta', required=True, metavar='URI',
                       help='base meta uri (e.g. https://admin:admin@amp.pharm.mssm.edu/signature-commons-metadata-api/)')
   parser.add_argument('--data', required=True, metavar='URI',
@@ -283,6 +309,7 @@ R2L1\tR2L2\t...\t1.0\t0.5\t...
       sys.stdin if file == '-' else open(file, 'r')
       for file in args.files
     ],
+    transpose=args.tranpose,
     meta_client=get_meta_client(args.meta, verbose=args.verbose),
     data_client=get_data_client(args.data, verbose=args.verbose),
     onerror=args.onerror,
