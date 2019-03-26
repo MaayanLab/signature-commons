@@ -249,7 +249,7 @@ def ingestion(files=[sys.stdin], transpose=False, repository_id=None, library_id
       print('processing file {n}...'.format(n=n), file=sys.stderr)
     parse_lines(
       transpose_lines(fh) if transpose else fh,
-      transpose=transpose,
+      preparsed=transpose,
       repository_id=repository_id,
       library_id=library_id,
       meta_client=meta_client,
@@ -309,7 +309,7 @@ however that this format does not support stream processing (so it should fit in
       sys.stdin if file == '-' else open(file, 'r')
       for file in args.files
     ],
-    transpose=args.tranpose,
+    transpose=args.transpose,
     meta_client=get_meta_client(args.meta, verbose=args.verbose),
     data_client=get_data_client(args.data, verbose=args.verbose),
     onerror=args.onerror,
