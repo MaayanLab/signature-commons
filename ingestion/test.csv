@@ -1,9 +1,9 @@
-	Cell Type	MCF10	MCF10
-	Drug	celastrol	vorinostat
-	Concentration	1 µM	10 µM
-	Time point	12h	6h
-	Assay	L1000	L1000
-Name	NCBI Gene ID		
-STAT3	6774	0.4	0.2
-MAPK3	5595	0.9	1
-STAT2	6773	0.3	1
+		Cell Type	MCF10	MCF10
+		Drug	celastrol	vorinostat
+		Concentration	1 µM	10 µM
+		Time point	12h	6h
+		Assay	L1000	L1000
+Name	NCBI Gene ID			
+STAT3	6774		0.4	0.2
+MAPK3	5595		0.9	1
+STAT2	6773		0.3	1

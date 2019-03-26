@@ -11,7 +11,7 @@ LIBRARY=$(
   "dataset": "${REPOSITORY_ID}",
   "meta": {
     "\$validator": "/@dcic/signature-commons-schema/core/unknown.json",
-    "name": "My first library"
+    "Name": "My first library"
   }
 }]
 EOF
@@ -25,6 +25,7 @@ python ingest_rank_matrix.py \
   -vvv \
   --meta "${META_URI}" \
   --data "${DATA_URI}" \
+  --transpose \
   --onerror resolve \
   ${REPOSITORY_ID} \
   ${LIBRARY_ID} \

@@ -41,6 +41,7 @@ def parse_lines(stream, preparsed=False, repository_id=None, library_id=None, me
   ''' Streaming parser for the format; sends data to the necessary APIs
   '''
   # We need to parse the top header into memory to construct the entities
+  stream = iter(stream)
   cur_na = 0
   header = []
   for line in stream:
@@ -61,7 +62,7 @@ def parse_lines(stream, preparsed=False, repository_id=None, library_id=None, me
   n_cols = header.shape[1]
   # Obtain the header labels
   header_c = header[:border_r, border_c]
-  header_r = header[border_r, :border_c + 1]
+  header_r = header[border_r, :border_c]
   # Construct entities with the header
   entity_ids = []
   in_entities = [
@@ -289,7 +290,7 @@ however that this format does not support stream processing (so it should fit in
                       help='signature file(s) to process (`-` for stdin)')
   parser.add_argument('-v', '--verbose', action='count', default=0,
                       help='increase output verbosity')
-  parser.add_argument('-t', '--transpose', action='store', default=False,
+  parser.add_argument('-t', '--transpose', action='store_true', default=False,
                       help='transpose input to have genes on the row labels and signature definitions on the column labels')
   parser.add_argument('--meta', required=True, metavar='URI',
                       help='base meta uri (e.g. https://admin:admin@amp.pharm.mssm.edu/signature-commons-metadata-api/)')
