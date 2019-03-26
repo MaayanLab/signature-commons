@@ -56,6 +56,10 @@ def parse_lines(stream, preparsed=False, repository_id=None, library_id=None, me
     cur_na = n_na
   # 2d header array
   header = np.array(header)
+  if len(header.shape) != 2:
+    print('Parsed col_border (should correspond to the column the labels begin)', cur_na)
+    print('Parsed header lengths (should be uniform)', *map(len, header))
+    raise 'Invalid header parsed'
   # Locate the column, row, and file borders
   border_c = cur_na
   border_r = header.shape[0] - 1
