@@ -1,0 +1,3 @@
+https://github.com/u8sand/PySwaggerClient/archive/master.zip
+numpy==1.15.2
+pyswagger==0.8.39
