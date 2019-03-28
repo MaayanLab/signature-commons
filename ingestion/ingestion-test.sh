@@ -9,6 +9,7 @@ LIBRARY=$(
   python swagger_client.py meta ${META_URI} Library_find_or_create -- body=- << EOF
 [{
   "dataset": "${REPOSITORY_ID}",
+  "dataset_type": "rank_matrix",
   "meta": {
     "\$validator": "/@dcic/signature-commons-schema/core/unknown.json",
     "Name": "My first library"
