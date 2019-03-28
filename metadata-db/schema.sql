@@ -79,7 +79,8 @@ CREATE TABLE public.libraries (
     uuid uuid NOT NULL,
     meta jsonb,
     dataset character varying NOT NULL,
-    "signature_keys" jsonb
+    dataset_type character varying NOT NULL,
+    signature_keys jsonb
 );
 
 
