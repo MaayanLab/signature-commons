@@ -39,6 +39,7 @@ services:
           - metadata-api
     env_file: .env
     # environment:
+    #   DEBUG: "*"
     #   ADMIN_PASSWORD: youruser
     #   ADMIN_USERNAME: yourpass
     #   POSTGRESQL_URL: postgresql://yourdbuser:yourdbpass@metadata-db:5432/signaturestore
