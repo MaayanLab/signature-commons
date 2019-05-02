@@ -23,6 +23,7 @@ services:
 
   # UI rendering, facilitates integration of metadata and data apis
   ui:
+    build: ../packages/ui
     image: maayanlab/sigcom-dev
     networks:
       internal:
@@ -32,12 +33,13 @@ services:
   # Metadata API, facilitates json-validatable
   #  database interactions with metadata postgresql DB
   metadata-api:
+    build: ../packages/metadata-api
     image: maayanlab/signature-commons-metadata-api
     networks:
       internal:
         aliases:
           - metadata-api
-    env_file: .env
+    env_file: ../.env
     # environment:
     #   DEBUG: "*"
     #   ADMIN_PASSWORD: youruser
@@ -46,12 +48,13 @@ services:
 
   # Data API, facilitates efficient data-level analysis
   data-api:
+    build: ../packages/data-api
     image: maayanlab/enrichmentapi
     networks:
       internal:
         aliases:
           - data-api
-    env_file: .env
+    env_file: ../.env
     environment:
       deployment: marathon_deployed
       # token: yourtoken
@@ -69,7 +72,7 @@ services:
       internal:
         aliases:
           - metadata-db
-    env_file: .env
+    env_file: ../.env
     # environment:
     #   POSTGRES_PASSWORD: signaturestore
     #   POSTGRES_USER: signaturestore

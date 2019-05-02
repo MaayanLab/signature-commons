@@ -1,0 +1,12 @@
+[submodule "packages/ui"]
+	path = packages/ui
+	url = git@github.com:dcic/signature-commons-ui.git
+[submodule "packages/schema"]
+	path = packages/schema
+	url = git@github.com:dcic/signature-commons-schema.git
+[submodule "packages/metadata-api"]
+	path = packages/metadata-api
+	url = git@github.com:dcic/signature-commons-metadata-api.git
+[submodule "packages/data-api"]
+	path = packages/data-api
+	url = git@github.com:MaayanLab/enrichmentAPI.git

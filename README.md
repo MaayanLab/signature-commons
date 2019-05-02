@@ -8,6 +8,18 @@ It uses an nginx proxy to proxy connections from the outside world to the docker
 
 It can also optionally host the signature commons metadata database.
 
+## Using this repo
+This is a mono-repo for all of the signature commons applications. It uses `git submodules` to organize the separate repositories into one and `lerna` for linking together javascript related dependencies. Cloning the repository and all the submodules can be done with:
+
+```bash
+git clone --recurse-submodules git@github.com:dcic/signature-commons.git
+```
+
+If you already have it cloned, you can get all the submodules with:
+```bash
+git submodule update --init --recursive
+```
+
 ## .env
 
 The docker-compose.yml file is annotated with the relevant environment variables which are necessary--but here is the skeleton of a `.env` file.
