@@ -42,7 +42,11 @@ services:
     #   DEBUG: "*"
     #   ADMIN_PASSWORD: youruser
     #   ADMIN_USERNAME: yourpass
-    #   POSTGRESQL_URL: postgresql://yourdbuser:yourdbpass@metadata-db:5432/signaturestore
+    #   TYPEORM_CONNECTION=postgres
+    #   TYPEORM_URL=postgresql://yourdbuser:yourdbpass@metadata-db:5432/signaturestore
+    #   TYPEORM_ENTITIES=dist/src/entities/*.js
+    #   TYPEORM_MIGRATIONS=dist/src/migration/*.js
+    #   TYPEORM_SUBSCRIBERS=dist/src/subscriber/*.js
 
   # Data API, facilitates efficient data-level analysis
   data-api:
