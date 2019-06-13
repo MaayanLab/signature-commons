@@ -44,6 +44,8 @@ services:
     #   ADMIN_USERNAME: yourpass
     #   TYPEORM_CONNECTION=postgres
     #   TYPEORM_URL=postgresql://yourdbuser:yourdbpass@metadata-db:5432/signaturestore
+    #   TYPEORM_SYNCHRONIZE=true
+    #   TYPEORM_MIGRATIONS_RUN=true
     #   TYPEORM_ENTITIES=dist/src/entities/*.js
     #   TYPEORM_MIGRATIONS=dist/src/migration/*.js
     #   TYPEORM_SUBSCRIBERS=dist/src/subscriber/*.js
