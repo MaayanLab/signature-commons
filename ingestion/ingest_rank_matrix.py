@@ -16,6 +16,12 @@ def chunk(iterable, size):
   for first in iterator:
     yield chain([first], islice(iterator, size - 1))
 
+def float_or_nan(s):
+  try:
+    return float(s.strip())
+  except:
+    return float(0)
+
 def count_first_na(L):
   ''' Count the number of na's that this list starts with
   '''
@@ -35,7 +41,9 @@ def transpose_lines(stream):
   lines = []
   for line in stream:
     lines.append(parse_line(line))
-  return np.array(lines).T
+  lines_arr = np.array(lines)
+  assert len(lines_arr.shape) == 2, "Error: inconsistent line sizes {}".format(str(set(len(l) for l in lines)))
+  return lines_arr.T
 
 def parse_lines(stream, preparsed=False, repository_id=None, library_id=None, meta_client=None, data_client=None, chunks=100, onerror='resolve', verbose=0):
   ''' Streaming parser for the format; sends data to the necessary APIs
@@ -207,14 +215,14 @@ def parse_lines(stream, preparsed=False, repository_id=None, library_id=None, me
           raise Exception(out_entity)
         else:
           continue
-
+    
     # send chunk of signatures to data API
     data_client_req = {
       'repository_uuid': repository_id,
       'signatures': [
         {
           'uuid': signature_id,
-          'entity_values': [float(entity[1]) for entity in entity_values],
+          'entity_values': [float_or_nan(entity[1]) for entity in entity_values],
         }
         for signature_id, entity_values in data_chunk
       ],
