@@ -15,11 +15,24 @@ The docker-compose.yml file is annotated with the relevant environment variables
 ```conf
 ADMIN_PASSWORD=signaturestore
 ADMIN_USERNAME=signaturestore
-POSTGRES_PASSWORD=signaturestore
 POSTGRES_USER=signaturestore
-POSTGRESQL_URL=postgresql://signaturestore:signaturestore@metadata-db:5432/signaturestore
-token=signaturestore
-AWS_ACCESS_KEY_ID=12345
-AWS_SECRET_ACCESS_KEY=12345/54321/12345
-aws_bucket=signaturestore
+POSTGRES_PASSWORD=signaturestore
+TYPEORM_CONNECTION=postgres
+TYPEORM_URL=postgresql://signaturestore:signaturestore@metadata-db:5432/signaturestore
+TYPEORM_SYNCHRONIZE=true
+TYPEORM_MIGRATIONS_RUN=true
+TYPEORM_ENTITIES=dist/src/entities/*.js
+TYPEORM_MIGRATIONS=dist/src/migration/*.js
+TYPEORM_SUBSCRIBERS=dist/src/subscriber/*.js
+token=yourtoken
+AWS_ACCESS_KEY_ID=yourawsaccesskey
+AWS_SECRET_ACCESS_KEY=yourawssecret
+aws_bucket=yourbucket
+```
+
+## Refreshing materialized views and indecies
+You may need to refresh the db cached views/indecies after adding new data. You can do so with:
+
+```bash
+docker-compose exec metadata-api /bin/bash -c "npx typeorm migration:revert && npx typeorm migration:run"
 ```
