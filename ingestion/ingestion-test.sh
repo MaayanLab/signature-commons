@@ -1,7 +1,7 @@
 #!/bin/sh
 
 META_URI=http://signaturestore:signaturestore@localhost/signature-commons-metadata-api/
-DATA_URI=http://_:SECRET@localhost/enrichmentapi/origin/api/v1
+DATA_URI=http://_:yourtoken@localhost/enrichmentapi/origin/api/v1
 REPOSITORY_ID=12345
 
 # Create library in metadata API
