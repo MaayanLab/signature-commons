@@ -45,7 +45,18 @@ def transpose_lines(stream):
   assert len(lines_arr.shape) == 2, "Error: inconsistent line sizes {}".format(str(set(len(l) for l in lines)))
   return lines_arr.T
 
-def parse_lines(stream, preparsed=False, repository_id=None, library_id=None, meta_client=None, data_client=None, chunks=100, onerror='resolve', verbose=0):
+def parse_lines(stream,
+  preparsed=False,
+  repository_id=None,
+  library_id=None,
+  entity_validator=None,
+  signature_validator=None,
+  meta_client=None,
+  data_client=None,
+  chunks=100,
+  onerror='resolve',
+  verbose=0,
+):
   ''' Streaming parser for the format; sends data to the necessary APIs
   '''
   # We need to parse the top header into memory to construct the entities
@@ -80,7 +91,7 @@ def parse_lines(stream, preparsed=False, repository_id=None, library_id=None, me
   in_entities = [
     {
       'meta': dict(zip(header_c, header[:border_r, c]), **{
-        '$validator': '/@dcic/signature-commons-schema/core/unknown.json'
+        '$validator': entity_validator
       })
     }
     for c in range(border_c + 1, n_cols)
@@ -156,7 +167,7 @@ def parse_lines(stream, preparsed=False, repository_id=None, library_id=None, me
       parsed_line = line if preparsed else parse_line(line)
       # Get metadata
       meta = dict(zip(header_r, parsed_line[:border_c + 1]), **{
-        '$validator': '/@dcic/signature-commons-schema/core/unknown.json'
+        '$validator': signature_validator
       })
       entities = [
         (entity, parsed_line[c],)
@@ -256,15 +267,29 @@ def pair_to_tsv(pair):
     )
   ])
 
-def ingestion(files=[sys.stdin], transpose=False, repository_id=None, library_id=None, meta_client=None, data_client=None, chunks=100, onerror='resolve', verbose=0):
+def ingestion(
+  files=[sys.stdin],
+  transpose=False,
+  repository_id=None,
+  library_id=None,
+  entity_validator=None,
+  signature_validator=None,
+  meta_client=None,
+  data_client=None,
+  chunks=100,
+  onerror='resolve',
+  verbose=0,
+):
   for n, fh in enumerate(files):
-    if args.verbose > 0:
+    if verbose > 0:
       print('processing file {n}...'.format(n=n), file=sys.stderr)
     parse_lines(
       transpose_lines(fh) if transpose else fh,
       preparsed=transpose,
       repository_id=repository_id,
       library_id=library_id,
+      entity_validator=entity_validator,
+      signature_validator=signature_validator,
       meta_client=meta_client,
       data_client=data_client,
       chunks=chunks,
@@ -308,6 +333,10 @@ however that this format does not support stream processing (so it should fit in
                       help='base meta uri (e.g. https://admin:admin@amp.pharm.mssm.edu/signature-commons-metadata-api/)')
   parser.add_argument('--data', required=True, metavar='URI',
                       help='base data uri (e.g. https://_:01-token-10@amp.pharm.mssm.edu/enrichmentAPI/)')
+  parser.add_argument('--entity-validator', required=False, metavar='URI',
+                      help='uri of entity metadata validator', default='/@dcic/signature-commons-schema/core/unknown.json')
+  parser.add_argument('--signature-validator', required=False, metavar='URI',
+                      help='uri of signature metadata validator', default='/@dcic/signature-commons-schema/core/unknown.json')
   parser.add_argument('--chunks', metavar='N', default=100,
                       help='max number of operations to pool together for bulk insertion')
   parser.add_argument('--onerror', default='resolve',
@@ -323,6 +352,8 @@ however that this format does not support stream processing (so it should fit in
       for file in args.files
     ],
     transpose=args.transpose,
+    entity_validator=args.entity_validator,
+    signature_validator=args.signature_validator,
     meta_client=get_meta_client(args.meta, verbose=args.verbose),
     data_client=get_data_client(args.data, verbose=args.verbose),
     onerror=args.onerror,
