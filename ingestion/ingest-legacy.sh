@@ -30,4 +30,4 @@ python ingest_rank_matrix.py \
   --onerror resolve \
   ${REPOSITORY_ID} \
   ${LIBRARY_ID} \
-  test.csv
+  data/test.tsv
