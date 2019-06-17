@@ -33,7 +33,10 @@ def count_first_na(L):
 def parse_line(line):
   ''' Single line parser
   '''
-  return np.array(re.split('[\t,]', re.sub(r'[\r\n]+$', '', line)))
+  return np.array([
+    cell.strip() if type(cell) == str else cell
+    for cell in re.split('[\t,]', re.sub(r'[\r\n]+$', '', line))
+  ])
 
 def transpose_lines(stream):
   ''' Parse and transpose a stream of lines
