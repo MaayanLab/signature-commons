@@ -102,7 +102,7 @@ fi
 
 cat << EOF | tee -a /etc/nginx/nginx.conf >> $log
     charset utf-8;
-    client_max_body_size 20M;
+    client_max_body_size 100M;
     sendfile on;
     keepalive_timeout  65;
     large_client_header_buffers 8 32k;
