@@ -5,11 +5,29 @@ This directory is intended to demonstrate how one goes about ingesting data into
 
 `swagger_client.py`: pyswaggerclient(-like) access to metadata and data API (in the data API case it's not actually swagger driven yet).
 
-`ingestion-test.sh`: A demonstration of the commands which need to be run to ingest a given dataset.
+`ingest.py`: A demonstration of the commands which need to be run to ingest a set of libraries.
+`ingest-legacy.sh`: A demonstration of the commands which need to be run to ingest a given dataset.
 
-`test.csv`: A demo data file in the proper format to be ingested.
+`data/test.tsv`: A demo data file in the proper format to be ingested.
+
+`data/file_descriptions.tsv`: Library level metadata
+
+## Library metadata description
+`data/file_descriptions.tsv` should be of the form:
+```
+[ ]      \t Key1   \t Key2   \t ...
+filename \t value1 \t value2 \t ...
+```
+
+The format will ultimately be converted into the following:
+```
+Library: { "id": resolved_uuid1(), "meta": { "Key1": value1, "Key2": value2 } }
+# signatures in the file will have
+Signature: { "id": resolved_uuid2(), "library": resolved_uuid1, "meta": { ... } }
+```
 
 ## Ingestion Data Format Description
+`data/*.tsv` should be of the form:
 ```
 [ ]    \t [ ]    \t .. \t Key1 \t Value1 \t Value3 \t ...
 [ ]    \t [ ]    \t .. \t Key2 \t Value2 \t Value4 \t ...
@@ -41,4 +59,4 @@ Signature: { "id": resolved_uuid4(), "meta": { "Key5": Value7, "Key6": Value8 } 
   Signature Data: entities: [ (resolved_uuid1, 2.0), (resolved_uuid2, 4.0) ]
 ```
 
-That-is a signature is created for every row. In some cases the data matrix is transposed--each row is actually an entity and the signature is on the columns (as is the case in `test.csv`--to handle this you just pass `--transpose` to the script. Note however that we cannot stream-process transposed data and instead need to load it all into memory to transpose it.
+That-is a signature is created for every row. In some cases the data matrix is transposed--each row is actually an entity and the signature is on the columns (as is the case in `test.tsv`--to handle this you just pass `--transpose` to the script. Note however that we cannot stream-process transposed data and instead need to load it all into memory to transpose it.
