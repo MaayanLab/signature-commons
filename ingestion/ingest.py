@@ -42,7 +42,7 @@ if __name__ == '__main__':
     file = line_split.pop(0)
     library_meta = dict(zip(header, line_split))
 
-    repository_id = name
+    repository_id = file
     library = meta_client.actions.Library_find_or_create.call(body=[{
       "dataset": repository_id,
       "dataset_type": "rank_matrix",
@@ -52,7 +52,7 @@ if __name__ == '__main__':
       ),
     }])
     library_id = library[0]['id']
-    print('processing {}...'.format(name))
+    print('processing {}...'.format(file))
     ingest_rank_matrix.ingestion(
       [open(os.path.join(data_dir, file), 'r')],
       transpose=True,

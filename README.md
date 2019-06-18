@@ -36,3 +36,15 @@ You may need to refresh the db cached views/indecies after adding new data. You 
 ```bash
 docker-compose exec metadata-api /bin/bash -c "npx typeorm migration:revert && npx typeorm migration:run"
 ```
+
+## Performing ingestion
+
+```bash
+# Setup virtualenv
+python3 -m venv venv
+source venv/bin/activate
+
+cd ingestion
+pip install -r requirements.txt
+python ingest.py
+```
