@@ -24,10 +24,11 @@ TYPEORM_MIGRATIONS_RUN=true
 TYPEORM_ENTITIES=dist/src/entities/*.js
 TYPEORM_MIGRATIONS=dist/src/migration/*.js
 TYPEORM_SUBSCRIBERS=dist/src/subscriber/*.js
-token=yourtoken
+TOKEN=yourtoken
 AWS_ACCESS_KEY_ID=yourawsaccesskey
 AWS_SECRET_ACCESS_KEY=yourawssecret
-aws_bucket=yourbucket
+AWS_BUCKET=yourbucket
+S3_BUCKET=yourbucket
 ```
 
 ## Refreshing materialized views and indecies
