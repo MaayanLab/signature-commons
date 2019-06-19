@@ -31,15 +31,19 @@ AWS_BUCKET=yourbucket
 S3_BUCKET=yourbucket
 ```
 
-## Refreshing materialized views and indecies
-You may need to refresh the db cached views/indecies after adding new data. You can do so with:
-
+## Refreshing APIs
+Metadata DB: Trigger the API to refresh the cached views/indecies
 ```bash
 docker-compose exec metadata-api /bin/bash -c "npx typeorm migration:revert && npx typeorm migration:run"
 ```
 
-## Performing ingestion
+Data DB: Trigger the API to load the desired data.
+```bash
+# The variables here should be replaced with .env settings, `file` should be set with the file used during ingestion.
+curl -H 'Content-Type: application/json' -H "Authorization: Token ${TOKEN}" -X POST 'http://localhost/enrichmentapi/api/v1/load' -d "{\"bucket\": \"${AWS_BUCKET}\", \"file\": \"${file}.so\", \"datasetname\": \"${file}\"}'
+```
 
+## Performing ingestion
 ```bash
 # Setup virtualenv
 python3 -m venv venv
