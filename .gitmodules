@@ -10,3 +10,6 @@
 [submodule "packages/data-api"]
 	path = packages/data-api
 	url = git@github.com:MaayanLab/enrichmentAPI.git
+[submodule "docker/proxy"]
+	path = docker/proxy
+	url = git@github.com:MaayanLab/proxy.git

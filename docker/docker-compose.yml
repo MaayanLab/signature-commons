@@ -5,7 +5,7 @@ services:
   #  and potentially handle load balancing in the future.
   proxy:
     build: ./proxy
-    image: maayanlab/signature-commons-proxy
+    image: maayanlab/proxy
     networks:
       default:
       internal:
