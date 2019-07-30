@@ -14,8 +14,8 @@
 	path = packages/data-api
 	url = git@github.com:MaayanLab/enrichmentAPI.git
 	branch = master
-[submodule "docker/proxy"]
-	path = docker/proxy
+[submodule "packages/proxy"]
+	path = packages/proxy
 	url = git@github.com:MaayanLab/proxy.git
 	branch = master
 

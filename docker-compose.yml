@@ -4,7 +4,8 @@ services:
   # Front-end to entire framework proxy API connections
   #  and potentially handle load balancing in the future.
   proxy:
-    build: ./proxy
+    build:
+      context: packages/proxy
     image: maayanlab/proxy
     networks:
       default:
@@ -23,7 +24,8 @@ services:
 
   # UI rendering, facilitates integration of metadata and data apis
   ui:
-    build: ../packages/ui
+    build:
+      context: packages/ui
     image: maayanlab/sigcom-dev
     networks:
       internal:
@@ -33,13 +35,14 @@ services:
   # Metadata API, facilitates json-validatable
   #  database interactions with metadata postgresql DB
   metadata-api:
-    build: ../packages/metadata-api
+    build:
+      context: packages/metadata-api
     image: maayanlab/signature-commons-metadata-api
     networks:
       internal:
         aliases:
           - metadata-api
-    env_file: ../.env
+    env_file: .env
     # environment:
     #   DEBUG: "*"
     #   ADMIN_PASSWORD: youruser
@@ -54,13 +57,14 @@ services:
 
   # Data API, facilitates efficient data-level analysis
   data-api:
-    build: ../packages/data-api
+    build:
+      context: packages/data-api
     image: maayanlab/enrichmentapi
     networks:
       internal:
         aliases:
           - data-api
-    env_file: ../.env
+    env_file: .env
     environment:
       deployment: marathon_deployed
       # token: yourtoken
@@ -71,49 +75,37 @@ services:
   
   data-db:
     image: minio/minio
-    command: "server /data"
+    entrypoint: /bin/sh
+    command: >
+      -c "
+      mkdir -p /data/$${MINIO_BUCKET};
+      minio server /data;
+      exit 0"
     networks:
       internal:
         aliases:
           - data-db
-    env_file: ../.env
+    env_file: .env
     # environment:
       # MINIO_ACCESS_KEY: yourawsaccesskey
       # MINIO_SECRET_KEY: yourawssecret
+      # MINIO_BUCKET: yourbucket
     ports:
       - 9000:9000
     volumes:
       - .minio:/root/.minio
       - data-db:/data
 
-  # This can be used as a cli to access minio via command line
-  #  with docker-compose run data-db-cli /bin/sh
-  #  the host will be configured under the name minio: (e.g. `mc ls minio`)
-  data-db-cli:
-    build: ./minio/init
-    image: maayanlab/signature-commons-data-db-init
-    networks:
-      internal:
-    env_file: ../.env
-    environment:
-      S3_ENDPOINT: http://data-db:9000
-      # S3_BUCKET: yourbucket
-      # MINIO_ACCESS_KEY: yourawsaccesskey
-      # MINIO_SECRET_KEY: yourawssecret
-    links:
-      - data-db
-
   # NOTE: If databases are stored elsewhere, they just need to be
   #  configured via the environment variables and commented out in this file.
   # Metadata database, underlying store of metadata
   metadata-db:
-    build: ./metadata-db
-    image: maayanlab/metadata-db
+    image: postgres
     networks:
       internal:
         aliases:
           - metadata-db
-    env_file: ../.env
+    env_file: .env
     # environment:
     #   POSTGRES_PASSWORD: signaturestore
     #   POSTGRES_USER: signaturestore
