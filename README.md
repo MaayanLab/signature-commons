@@ -21,27 +21,8 @@ git submodule update --init --recursive
 ```
 
 ## .env
+Many aspects of the application can be configured via environment variables--copy `.env.example` to `.env` and modify as needed.
 
-The docker-compose.yml file is annotated with the relevant environment variables which are necessary--but here is the skeleton of a `.env` file.
-
-```conf
-ADMIN_PASSWORD=signaturestore
-ADMIN_USERNAME=signaturestore
-POSTGRES_USER=signaturestore
-POSTGRES_PASSWORD=signaturestore
-TYPEORM_CONNECTION=postgres
-TYPEORM_URL=postgresql://signaturestore:signaturestore@metadata-db:5432/signaturestore
-TYPEORM_SYNCHRONIZE=true
-TYPEORM_MIGRATIONS_RUN=true
-TYPEORM_ENTITIES=dist/src/entities/*.js
-TYPEORM_MIGRATIONS=dist/src/migration/*.js
-TYPEORM_SUBSCRIBERS=dist/src/subscriber/*.js
-TOKEN=yourtoken
-AWS_ACCESS_KEY_ID=yourawsaccesskey
-AWS_SECRET_ACCESS_KEY=yourawssecret
-AWS_BUCKET=yourbucket
-S3_BUCKET=yourbucket
-```
 
 ## Refreshing APIs
 Metadata DB: Trigger the API to refresh the cached views/indecies
