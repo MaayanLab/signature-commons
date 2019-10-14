@@ -18,4 +18,6 @@
 	path = packages/proxy
 	url = git@github.com:MaayanLab/proxy.git
 	branch = master
-
+[submodule "packages/controller"]
+	path = packages/controller
+	url = git@github.com:dcic/signature-commons-controller.git
