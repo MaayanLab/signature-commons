@@ -6,7 +6,7 @@ services:
   proxy:
     build:
       context: packages/proxy
-    image: maayanlab/proxy
+    image: maayanlab/proxy:1.1.1
     networks:
       default:
       internal:
@@ -14,10 +14,10 @@ services:
           - proxy
     environment:
       nginx_server_name: localhost
-      nginx_proxy_00: "/sigcom-dev/ http://ui:80/sigcom-dev/"
-      nginx_proxy_03: "/signature-commons-metadata-api/ http://metadata-api:3000/signature-commons-metadata-api/"
-      nginx_proxy_04: "/enrichmentapi/ http://data-api:8080/enrichmentapi/"
-      nginx_redirect_00: "/sigcom/ /sigcom-dev/"
+      nginx_proxy_00: "/sigcom-dev/?(.*) http://ui:80/sigcom-dev/$$1"
+      nginx_proxy_03: "/signature-commons-metadata-api/?(.*) http://metadata-api:3000/signature-commons-metadata-api/$$1"
+      nginx_proxy_04: "/enrichmentapi/?(.*) http://data-api:8080/enrichmentapi/$$1"
+      nginx_redirect_00: "/sigcom/?(.*) /sigcom-dev/$$1"
     ports:
       - 80:80
       # - 443:443
