@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+  metadata-db:
+    image: postgres:11
+    restart: "on-failure"
+    networks:
+      internal:
+        aliases:
+          - metadata-db
+    environment:
+      POSTGRES_USER: ${META_DB_USERNAME}
+      POSTGRES_PASSWORD: ${META_DB_PASSWORD}
+      POSTGRES_DATABASE: ${META_DB_DATABASE}
+    volumes:
+      - metadata-db:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+# Internal volumes
+volumes:
+  metadata-db:
+  data-db:
+
+# Internal docker networks
+networks:
+  internal:

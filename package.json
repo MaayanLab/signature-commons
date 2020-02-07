@@ -2,12 +2,16 @@
   "name": "root",
   "private": true,
   "scripts": {
-    "start:metadata-db": "docker-compose up -d metadata-db",
-    "start:data-db": "docker-compose up -d data-db",
+    "start:data-api:dev": "dotenv-load 'cd packages/data-api && gradle tomcatRun'",
+    "start:data-api:production": "dotenv-load 'docker-compose up -f docker-compose.yml -d data-api'",
+    "start:data-db": "dotenv-load 'docker-compose up -f docker-compose.data-db.yml -d data-db'",
     "start:db": "npm run start:metadata-db && npm run start:data-db",
-    "start:metadata-api": "dotenv-load 'cd packages/metadata-api && npm run start'",
-    "start:data-api": "dotenv-load 'cd packages/data-api && gradle tomcatRun'",
-    "start:ui": "dotenv-load 'cd packages/ui && npm run dev -- -p 5000'"
+    "start:metadata-api:dev": "dotenv-load 'cd packages/metadata-api && npm run start'",
+    "start:metadata-api:production": "dotenv-load 'docker-compose up -f docker-compose.yml -d metadata-api'",
+    "start:metadata-db": "dotenv-load 'docker-compose up -f docker-compose.metadata-db.yml -d metadata-db'",
+    "start:production": "dotenv-load 'docker-compose up -f docker-compose.yml -d'",
+    "start:ui:dev": "dotenv-load 'cd packages/ui && npm run dev -- -p 5000'",
+    "start:ui:production": "dotenv-load 'docker-compose up -f docker-compose.yml -d ui'"
   },
   "devDependencies": {
     "dotenv-load": "^2.0.0",

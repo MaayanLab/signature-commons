@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 services:
   # Front-end to entire framework proxy API connections
@@ -6,17 +6,21 @@ services:
   proxy:
     build:
       context: packages/proxy
-    image: maayanlab/proxy:1.1.1
+    image: maayanlab/proxy:1.1.2
+    labels:
+      kompose.image-pull-policy: "Always"
+      kompose.service.expose: "true"
+    restart: "on-failure"
     networks:
       default:
       internal:
         aliases:
           - proxy
     environment:
-      nginx_server_name: localhost
-      nginx_proxy_00: "/sigcom/?(.*) http://ui:80/sigcom/$$1"
-      nginx_proxy_03: "/signature-commons-metadata-api/?(.*) http://metadata-api:3000/signature-commons-metadata-api/$$1"
-      nginx_proxy_04: "/enrichmentapi/?(.*) http://data-api:8080/enrichmentapi/$$1"
+      nginx_server_name: "${SERVER_NAME}"
+      nginx_proxy_00: "${UI_PREFIX}/?(.*) http://ui:80/sigcom/$$1"
+      nginx_proxy_03: "${META_API_PREFIX}/?(.*) http://metadata-api:3000/$$1"
+      nginx_proxy_04: "${DATA_API_PREFIX}/?(.*) http://data-api:8080/enrichmentapi/$$1"
     ports:
       - 80:80
       # - 443:443
@@ -26,6 +30,9 @@ services:
     build:
       context: packages/ui
     image: maayanlab/sigcom:generic
+    labels:
+      kompose.image-pull-policy: "Always"
+    restart: "on-failure"
     networks:
       internal:
         aliases:
@@ -37,86 +44,47 @@ services:
     build:
       context: packages/metadata-api
     image: maayanlab/signature-commons-metadata-api
+    labels:
+      kompose.image-pull-policy: "Always"
+    restart: "on-failure"
     networks:
       internal:
         aliases:
           - metadata-api
-    env_file: .env
-    # environment:
-    #   DEBUG: "*"
-    #   ADMIN_PASSWORD: youruser
-    #   ADMIN_USERNAME: yourpass
-    #   TYPEORM_CONNECTION=postgres
-    #   TYPEORM_URL=postgresql://yourdbuser:yourdbpass@metadata-db:5432/signaturestore
-    #   TYPEORM_SYNCHRONIZE=true
-    #   TYPEORM_MIGRATIONS_RUN=true
-    #   TYPEORM_ENTITIES=dist/src/entities/*.js
-    #   TYPEORM_MIGRATIONS=dist/src/migration/*.js
-    #   TYPEORM_SUBSCRIBERS=dist/src/subscriber/*.js
+    environment:
+      ADMIN_PASSWORD: "${META_API_PASSWORD}"
+      ADMIN_USERNAME: "${META_API_USERNAME}"
+      DEBUG: "${META_API_DEBUG}"
+      NODE_OPTIONS: "--max_old_space_size=4096"
+      PREFIX: ""
+      TYPEORM_MIGRATIONS_RUN: "true"
+      TYPEORM_SYNCHRONIZE: "true"
+      TYPEORM_LOGGING: "true"
+      TYPEORM_URL: "postgresql://${META_DB_USERNAME}:${META_DB_PASSWORD}@${META_DB_HOST}:${META_DB_PORT}/${META_DB_DATABASE}"
 
   # Data API, facilitates efficient data-level analysis
   data-api:
     build:
       context: packages/data-api
     image: maayanlab/enrichmentapi
+    labels:
+      kompose.image-pull-policy: "Always"
+    restart: "on-failure"
     networks:
       internal:
         aliases:
           - data-api
-    env_file: .env
     environment:
+      TOKEN: "${DATA_API_TOKEN}"
       deployment: marathon_deployed
-      # token: yourtoken
-      # AWS_ACCESS_KEY_ID: yourawsaccesskey
-      # AWS_SECRET_ACCESS_KEY: yourawssecret
-      # AWS_BUCKET: yourbucket
-      AWS_ENDPOINT_URL: http://data-db:9000
-  
-  data-db:
-    image: minio/minio
-    entrypoint: /bin/sh
-    command: >
-      -c "
-      mkdir -p /data/$${MINIO_BUCKET};
-      minio server /data;
-      exit 0"
-    networks:
-      internal:
-        aliases:
-          - data-db
-    env_file: .env
-    # environment:
-      # MINIO_ACCESS_KEY: yourawsaccesskey
-      # MINIO_SECRET_KEY: yourawssecret
-      # MINIO_BUCKET: yourbucket
-    ports:
-      - 9000:9000
-    volumes:
-      - .minio:/root/.minio
-      - data-db:/data
+      AWS_ACCESS_KEY_ID: "${DATA_DB_ACCESS_KEY}"
+      AWS_SECRET_ACCESS_KEY: "${DATA_DB_SECRET_KEY}"
+      AWS_BUCKET: "${DATA_DB_BUCKET}"
+      AWS_ENDPOINT_URL: "${DATA_DB_ENDPOINT}"
 
-  # NOTE: If databases are stored elsewhere, they just need to be
-  #  configured via the environment variables and commented out in this file.
-  # Metadata database, underlying store of metadata
-  metadata-db:
-    image: postgres:11
-    networks:
-      internal:
-        aliases:
-          - metadata-db
-    env_file: .env
-    # environment:
-    #   POSTGRES_PASSWORD: signaturestore
-    #   POSTGRES_USER: signaturestore
-    volumes:
-      - metadata-db:/var/lib/postgresql/data
-    ports:
-      - 5432:5432
-
-# Internal volumes
-volumes:
-  metadata-db:
-  data-db:
+# Internal docker networks
+networks:
+  internal:
 
 # Internal docker networks
 networks:
