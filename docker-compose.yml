@@ -25,7 +25,13 @@ services:
   ui:
     build:
       context: packages/ui
-    image: maayanlab/sigcom:generic
+    image: maayanlab/sigcom-dev:0.2.22
+    environment:
+      PREFIX: /sigcom
+      # NOTE: These should reflect the urls you would access in browser
+      NEXT_PUBLIC_METADATA_API: /signature-commons-metadata-api
+      NEXT_PUBLIC_DATA_API: /enrichmentapi
+      NEXT_PUBLIC_ENRICHR_URL: https://amp.pharm.mssm.edu/Enrichr
     networks:
       internal:
         aliases:
