@@ -1,0 +1,11 @@
+# Source: docker-compose/templates/ingress.yaml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: signature-commons
+  labels:
+    app: signature-commons
+spec:
+  backend:
+    serviceName: signature-commons
+    servicePort: 80

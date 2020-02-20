@@ -1,0 +1,1 @@
+Thanks to https://github.com/turnerlabs/helm-chart-docker-compose
