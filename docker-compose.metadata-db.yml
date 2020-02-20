@@ -20,7 +20,6 @@ services:
 # Internal volumes
 volumes:
   metadata-db:
-  data-db:
 
 # Internal docker networks
 networks:

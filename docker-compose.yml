@@ -18,9 +18,9 @@ services:
           - proxy
     environment:
       nginx_server_name: "${SERVER_NAME}"
-      nginx_proxy_00: "${UI_PREFIX}/?(.*) http://ui:80/sigcom/$$1"
-      nginx_proxy_03: "${META_API_PREFIX}/?(.*) http://metadata-api:3000/$$1"
-      nginx_proxy_04: "${DATA_API_PREFIX}/?(.*) http://data-api:8080/enrichmentapi/$$1"
+      nginx_proxy_00: "${UI_PREFIX}(|/.*) http://ui:80${UI_PREFIX}$$1"
+      nginx_proxy_01: "${META_API_PREFIX}(|/.*) http://metadata-api:3000${META_API_PREFIX}$$1"
+      nginx_proxy_02: "${DATA_API_PREFIX}(|/.*) http://data-api:8080${DATA_API_PREFIX}$$1"
     ports:
       - 80:80
       # - 443:443
@@ -29,7 +29,7 @@ services:
   ui:
     build:
       context: packages/ui
-    image: maayanlab/sigcom:generic
+    image: maayanlab/sigcom:latest
     labels:
       kompose.image-pull-policy: "Always"
     restart: "on-failure"
@@ -37,13 +37,17 @@ services:
       internal:
         aliases:
           - ui
+    environment:
+      PREFIX: "${UI_PREFIX}"
+      NEXT_PUBLIC_METADATA_API: "${META_API_PREFIX}"
+      NEXT_PUBLIC_DATA_API: "${DATA_API_PREFIX}"
 
   # Metadata API, facilitates json-validatable
   #  database interactions with metadata postgresql DB
   metadata-api:
     build:
       context: packages/metadata-api
-    image: maayanlab/signature-commons-metadata-api
+    image: maayanlab/signature-commons-metadata-api:latest
     labels:
       kompose.image-pull-policy: "Always"
     restart: "on-failure"
@@ -56,17 +60,17 @@ services:
       ADMIN_USERNAME: "${META_API_USERNAME}"
       DEBUG: "${META_API_DEBUG}"
       NODE_OPTIONS: "--max_old_space_size=4096"
-      PREFIX: ""
-      TYPEORM_MIGRATIONS_RUN: "true"
+      PREFIX: "${META_API_PREFIX}"
+      TYPEORM_MIGRATIONS_RUN: "false"
       TYPEORM_SYNCHRONIZE: "true"
       TYPEORM_LOGGING: "true"
-      TYPEORM_URL: "postgresql://${META_DB_USERNAME}:${META_DB_PASSWORD}@${META_DB_HOST}:${META_DB_PORT}/${META_DB_DATABASE}"
+      TYPEORM_URL: "postgres://${META_DB_USERNAME}:${META_DB_PASSWORD}@${META_DB_HOST}:${META_DB_PORT}/${META_DB_DATABASE}"
 
   # Data API, facilitates efficient data-level analysis
   data-api:
     build:
       context: packages/data-api
-    image: maayanlab/enrichmentapi
+    image: maayanlab/enrichmentapi:latest
     labels:
       kompose.image-pull-policy: "Always"
     restart: "on-failure"
@@ -75,16 +79,13 @@ services:
         aliases:
           - data-api
     environment:
+      PREFIX: "${DATA_API_PREFIX}"
       TOKEN: "${DATA_API_TOKEN}"
       deployment: marathon_deployed
       AWS_ACCESS_KEY_ID: "${DATA_DB_ACCESS_KEY}"
       AWS_SECRET_ACCESS_KEY: "${DATA_DB_SECRET_KEY}"
       AWS_BUCKET: "${DATA_DB_BUCKET}"
       AWS_ENDPOINT_URL: "${DATA_DB_ENDPOINT}"
-
-# Internal docker networks
-networks:
-  internal:
 
 # Internal docker networks
 networks:
