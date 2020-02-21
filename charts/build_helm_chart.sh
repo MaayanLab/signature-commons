@@ -1,61 +1,65 @@
 #!/usr/bin/env bash
 
 export output=signature-commons
+export version=v1
 
 mkdir -p "${output}"
 
 # Generate base kubernetes deployments with helm-chart-docker-compose
 helm template --debug \
-  helm-chart-docker-compose ./helm-chart-docker-compose/ \
+  helm-chart-docker-compose ./helm-chart-docker-compose/v1/ \
   -f ../docker-compose.yml \
   -f ../docker-compose.metadata-db.yml \
   -f ../docker-compose.data-db.yml \
-  > "${output}/${output}.yaml.stage0"
+  > "${output}/${version}/${output}.yaml.stage0"
 
 # Generate values.yaml with .env.example
 sed \
   -e 's/^\([^=]\+\)=\(.*\)$/\1: \2/g' \
   < ../.env.example \
-  > "${output}/Values.yaml"
+  > "${output}/${version}/values.yaml"
 
 # Generate .Values substitution with .env.example
 sed \
   -e 's/^\([^=]\+\)=\(.*\)$/export \1="{{ .Values.\1 }}"/g' \
   < ../.env.example \
-  > "${output}/.env"
+  > "${output}/${version}/.env"
 
 # Substitute variables with envsubst
-. ${output}/.env
+. ${output}/${version}/.env
 export _DOLLAR='$'
 sed -e 's/\$\$/${_DOLLAR}/g' \
-  < "${output}/${output}.yaml.stage0" \
-  > "${output}/${output}.yaml.stage1"
+  < "${output}/${version}/${output}.yaml.stage0" \
+  > "${output}/${version}/${output}.yaml.stage1"
 envsubst \
-  < "${output}/${output}.yaml.stage1" \
-  > "${output}/${output}.yaml.stage2"
+  < "${output}/${version}/${output}.yaml.stage1" \
+  > "${output}/${version}/${output}.yaml.stage2"
 
 # Replace helm-chart-docker-compose
 sed \
   -e "s/helm-chart-docker-compose/${output}/g" \
-  < "${output}/${output}.yaml.stage2" \
-  > "${output}/${output}.yaml.stage3"
+  < "${output}/${version}/${output}.yaml.stage2" \
+  > "${output}/${version}/${output}.yaml.stage3"
 
 # Split file into separate files
-mkdir -p "${output}/templates"
+mkdir -p "${output}/${version}/templates"
 python3 -c "
 import os, re
-for content in map(str.strip, open(os.path.join('${output}', '${output}.yaml.stage3'), 'r').read().split('---')):
+for content in map(str.strip, open(os.path.join('${output}', '${version}', '${output}.yaml.stage3'), 'r').read().split('---')):
   m = re.search('# Source!: (.+)\n', content)
   if m:
     filename = m.group(1)
-    print(content, file=open(os.path.join('${output}', 'templates', os.path.basename(filename)), 'w'))
+    print(content, file=open(os.path.join('${output}', '${version}', 'templates', os.path.basename(filename)), 'w'))
 "
+
+# Add README
+cp ../README.md "${output}/${version}/README.md"
 
 # Clean up intermediary files
 echo "Cleaning up..."
 rm \
-  "${output}/${output}.yaml.stage0" \
-  "${output}/${output}.yaml.stage1" \
-  "${output}/${output}.yaml.stage2" \
-  "${output}/${output}.yaml.stage3" \
-  "${output}/.env"
+  "${output}/${version}/${output}.yaml.stage0" \
+  "${output}/${version}/${output}.yaml.stage1" \
+  "${output}/${version}/${output}.yaml.stage2" \
+  "${output}/${version}/${output}.yaml.stage3" \
+  "${output}/${version}/.env"

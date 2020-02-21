@@ -1,0 +1,60 @@
+questions:
+- variable: SERVER_NAME
+group: Ingress
+label: Server Name
+description: "The hostname to expose sigcom under"
+type: string
+required: true
+default: localhost
+subquestions:
+- variable: UI_PREFIX
+  default: /sigcom
+- variable: META_API_PREFIX
+  default: /sigcom-metadata-api
+- variable: DATA_API_PREFIX
+  default: /sigcom-data-api
+
+group: "Metadata API"
+subquestions:
+- variable: META_API_USERNAME
+  default: signaturestore
+- variable: META_API_PASSWORD
+  default: signaturestore
+- variable: META_API_DEBUG
+
+group: "Data API"
+subquestions:
+- variable: DATA_API_TOKEN
+  default: signaturestore
+
+group: S3 Database
+label: Data (S3)
+description: "The data s3 database"
+subquestions:
+- variable: DATA_DB_ENDPOINT
+  label: S3 Endpoint
+  default: http://data-db:9000
+- variable: DATA_DB_ACCESS_KEY
+  label: S3 Access Key
+  default: signaturestore
+- variable: DATA_DB_SECRET_KEY
+  label: S3 Secret Key
+  default: signaturestore
+- variable: DATA_DB_BUCKET
+  label: S3 Bucket
+  default: signaturestore
+
+group: "Postgres Database"
+description: "The metadata postgres database"
+subquestions:
+- variable: META_DB_HOST
+  default: metadata-db
+- variable: META_DB_PORT
+  default: 5432
+- variable: META_DB_USERNAME
+  default: signaturestore
+- variable: META_DB_PASSWORD
+  default: signaturestore
+- variable: META_DB_DATABASE
+  default: signaturestore
+
