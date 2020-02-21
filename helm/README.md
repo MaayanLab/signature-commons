@@ -10,5 +10,5 @@ helm github install \
   --repo https://github.com/MaayanLab/signature-commons.git \
   --ref env-refactor --path helm/signature-commons \
   --namespace signature-commons --generate-name \
-  -f signature-commons-config.yaml
+  -f signature-commons/Values.yaml
 ```
