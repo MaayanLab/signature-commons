@@ -1,5 +1,5 @@
 {{ $releaseName := .Release.Name }}
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ $releaseName }}
@@ -33,7 +33,19 @@ spec:
       {{- range $service, $val := .Values.services }}
       - name: {{ $service }}
         image: {{ $val.image }}
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
+        {{- if $val.entrypoint }}
+        command:
+        {{- range $key, $value := $val.entrypoint }}
+        - {{ $value }}
+        {{- end }}
+        {{- end }}
+        {{- if $val.command }}
+        args:
+        {{- range $key, $value := $val.command }}
+        - {{ $value }}
+        {{- end }}
+        {{- end }}
         env:
         {{- range $key, $value := $val.environment }}
         - name: {{ $key }}

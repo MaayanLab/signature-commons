@@ -4,12 +4,14 @@ services:
   data-db:
     image: minio/minio
     restart: "on-failure"
-    entrypoint: /bin/sh
-    command: >
-      -c "
-      mkdir -p /data/$${MINIO_BUCKET};
+    entrypoint:
+    - /bin/sh
+    command:
+    - -c
+    - >
+      mkdir -p /data/$$MINIO_BUCKET;
       minio server /data;
-      exit 0"
+      exit 0
     networks:
       internal:
         aliases:

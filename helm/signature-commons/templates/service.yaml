@@ -8,6 +8,9 @@ metadata:
 spec:
   type: NodePort
   ports:
+  - name: "8080"
+    port: 8080
+    targetPort: 8080
   selector:
     app: signature-commons
 
@@ -35,6 +38,9 @@ metadata:
 spec:
   type: NodePort
   ports:
+  - name: "3000"
+    port: 3000
+    targetPort: 3000
   selector:
     app: signature-commons
 
@@ -77,5 +83,8 @@ metadata:
 spec:
   type: NodePort
   ports:
+  - name: "80"
+    port: 80
+    targetPort: 80
   selector:
     app: signature-commons

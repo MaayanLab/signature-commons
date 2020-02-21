@@ -1,5 +1,5 @@
 # Source: docker-compose/templates/deployment.yaml
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: signature-commons
@@ -17,7 +17,7 @@ spec:
       containers:
       - name: data-api
         image: maayanlab/enrichmentapi:latest
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         env:
         - name: AWS_ACCESS_KEY_ID
           value: "{{ .Values.DATA_DB_ACCESS_KEY }}"
@@ -34,11 +34,18 @@ spec:
         - name: deployment
           value: "marathon_deployed"
         ports:
+          - containerPort: 8080
       
 
       - name: data-db
         image: minio/minio
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
+        command:
+        - /bin/sh
+        args:
+        - -c
+        - mkdir -p /data/$MINIO_BUCKET; minio server /data; exit 0
+
         env:
         - name: MINIO_ACCESS_KEY
           value: "{{ .Values.DATA_DB_ACCESS_KEY }}"
@@ -51,7 +58,7 @@ spec:
 
       - name: metadata-api
         image: maayanlab/signature-commons-metadata-api:latest
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         env:
         - name: ADMIN_PASSWORD
           value: "{{ .Values.META_API_PASSWORD }}"
@@ -72,11 +79,12 @@ spec:
         - name: TYPEORM_URL
           value: "postgres://{{ .Values.META_DB_USERNAME }}:{{ .Values.META_DB_PASSWORD }}@{{ .Values.META_DB_HOST }}:{{ .Values.META_DB_PORT }}/{{ .Values.META_DB_DATABASE }}"
         ports:
+          - containerPort: 3000
       
 
       - name: metadata-db
         image: postgres:11
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         env:
         - name: POSTGRES_DATABASE
           value: "{{ .Values.META_DB_DATABASE }}"
@@ -89,14 +97,14 @@ spec:
 
       - name: proxy
         image: maayanlab/proxy:1.1.2
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         env:
         - name: nginx_proxy_00
-          value: "{{ .Values.UI_PREFIX }}(|/.*) http://ui:80{{ .Values.UI_PREFIX }}$$1"
+          value: "{{ .Values.UI_PREFIX }}(|/.*) http://ui:80{{ .Values.UI_PREFIX }}$1"
         - name: nginx_proxy_01
-          value: "{{ .Values.META_API_PREFIX }}(|/.*) http://metadata-api:3000{{ .Values.META_API_PREFIX }}$$1"
+          value: "{{ .Values.META_API_PREFIX }}(|/.*) http://metadata-api:3000{{ .Values.META_API_PREFIX }}$1"
         - name: nginx_proxy_02
-          value: "{{ .Values.DATA_API_PREFIX }}(|/.*) http://data-api:8080{{ .Values.DATA_API_PREFIX }}$$1"
+          value: "{{ .Values.DATA_API_PREFIX }}(|/.*) http://data-api:8080{{ .Values.DATA_API_PREFIX }}$1"
         - name: nginx_server_name
           value: "{{ .Values.SERVER_NAME }}"
         ports:
@@ -106,7 +114,7 @@ spec:
 
       - name: ui
         image: maayanlab/sigcom:latest
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         env:
         - name: NEXT_PUBLIC_DATA_API
           value: "{{ .Values.DATA_API_PREFIX }}"
@@ -115,3 +123,4 @@ spec:
         - name: PREFIX
           value: "{{ .Values.UI_PREFIX }}"
         ports:
+          - containerPort: 80

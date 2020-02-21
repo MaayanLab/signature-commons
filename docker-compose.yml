@@ -41,6 +41,8 @@ services:
       PREFIX: "${UI_PREFIX}"
       NEXT_PUBLIC_METADATA_API: "${META_API_PREFIX}"
       NEXT_PUBLIC_DATA_API: "${DATA_API_PREFIX}"
+    ports:
+      - "80"
 
   # Metadata API, facilitates json-validatable
   #  database interactions with metadata postgresql DB
@@ -65,6 +67,8 @@ services:
       TYPEORM_SYNCHRONIZE: "true"
       TYPEORM_LOGGING: "true"
       TYPEORM_URL: "postgres://${META_DB_USERNAME}:${META_DB_PASSWORD}@${META_DB_HOST}:${META_DB_PORT}/${META_DB_DATABASE}"
+    ports:
+      - "3000"
 
   # Data API, facilitates efficient data-level analysis
   data-api:
@@ -86,6 +90,8 @@ services:
       AWS_SECRET_ACCESS_KEY: "${DATA_DB_SECRET_KEY}"
       AWS_BUCKET: "${DATA_DB_BUCKET}"
       AWS_ENDPOINT_URL: "${DATA_DB_ENDPOINT}"
+    ports:
+      - "8080"
 
 # Internal docker networks
 networks:
