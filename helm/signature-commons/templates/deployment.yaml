@@ -95,23 +95,6 @@ spec:
         ports:
           - containerPort: 5432
 
-      - name: proxy
-        image: maayanlab/proxy:1.1.2
-        imagePullPolicy: Always
-        env:
-        - name: nginx_proxy_00
-          value: "{{ .Values.UI_PREFIX }}(|/.*) http://ui:80{{ .Values.UI_PREFIX }}$1"
-        - name: nginx_proxy_01
-          value: "{{ .Values.META_API_PREFIX }}(|/.*) http://metadata-api:3000{{ .Values.META_API_PREFIX }}$1"
-        - name: nginx_proxy_02
-          value: "{{ .Values.DATA_API_PREFIX }}(|/.*) http://data-api:8080{{ .Values.DATA_API_PREFIX }}$1"
-        - name: nginx_server_name
-          value: "{{ .Values.SERVER_NAME }}"
-        ports:
-          - containerPort: 80
-      
-      
-
       - name: ui
         image: maayanlab/sigcom:latest
         imagePullPolicy: Always

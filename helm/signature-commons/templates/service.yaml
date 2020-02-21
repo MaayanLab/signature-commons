@@ -73,18 +73,3 @@ spec:
     targetPort: 80
   selector:
     app: signature-commons
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: signature-commons
-  labels:
-    app: signature-commons
-spec:
-  type: NodePort
-  ports:
-  - name: "80"
-    port: 80
-    targetPort: 80
-  selector:
-    app: signature-commons
