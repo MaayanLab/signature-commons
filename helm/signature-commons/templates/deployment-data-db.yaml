@@ -1,0 +1,34 @@
+# Source: signature-commons/templates/deployment.yaml
+# Source!: signature-commons/templates/deployment-data-db.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-data-db
+spec:
+  selector:
+    matchLabels:
+      workload.user.cattle.io/workloadselector: deployment-data-db
+  template:
+    metadata:
+      labels:
+        workload.user.cattle.io/workloadselector: deployment-data-db
+    spec:
+      containers:
+      - name: data-db
+        image: minio/minio
+        imagePullPolicy: Always
+        command:
+        - /bin/sh
+        args:
+        - -c
+        - mkdir -p /data/$MINIO_BUCKET; minio server /data; exit 0
+
+        env:
+        - name: MINIO_ACCESS_KEY
+          value: "{{ .Values.DATA_DB_ACCESS_KEY }}"
+        - name: MINIO_BUCKET
+          value: "{{ .Values.DATA_DB_BUCKET }}"
+        - name: MINIO_SECRET_KEY
+          value: "{{ .Values.DATA_DB_SECRET_KEY }}"
+        ports:
+          - containerPort: 9000

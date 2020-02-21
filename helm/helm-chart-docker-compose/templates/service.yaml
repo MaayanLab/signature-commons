@@ -1,11 +1,10 @@
-{{ $releaseName := .Release.Name }}
 {{ range $service, $val := .Values.services }}
+---
+# Source!: signature-commons/templates/service-{{ $service }}.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ $releaseName }}
-  labels:
-    app: {{ $releaseName }}
+  name: "{{ $service }}"
 spec:
   type: NodePort
   ports:
@@ -15,5 +14,5 @@ spec:
     targetPort: {{ splitList ":" $v | last }}
   {{- end }}
   selector:
-    app: {{ $releaseName }}
+    workload.user.cattle.io/workloadselector: "deployment-{{ $service }}"
 {{ end }}

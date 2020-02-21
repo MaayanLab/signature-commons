@@ -1,0 +1,40 @@
+# Source: signature-commons/templates/deployment.yaml
+# Source!: signature-commons/templates/deployment-metadata-api.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-metadata-api
+spec:
+  selector:
+    matchLabels:
+      workload.user.cattle.io/workloadselector: deployment-metadata-api
+  template:
+    metadata:
+      labels:
+        workload.user.cattle.io/workloadselector: deployment-metadata-api
+    spec:
+      containers:
+      - name: metadata-api
+        image: maayanlab/signature-commons-metadata-api:latest
+        imagePullPolicy: Always
+        env:
+        - name: ADMIN_PASSWORD
+          value: "{{ .Values.META_API_PASSWORD }}"
+        - name: ADMIN_USERNAME
+          value: "{{ .Values.META_API_USERNAME }}"
+        - name: DEBUG
+          value: "{{ .Values.META_API_DEBUG }}"
+        - name: NODE_OPTIONS
+          value: "--max_old_space_size=4096"
+        - name: PREFIX
+          value: "{{ .Values.META_API_PREFIX }}"
+        - name: TYPEORM_LOGGING
+          value: "true"
+        - name: TYPEORM_MIGRATIONS_RUN
+          value: "false"
+        - name: TYPEORM_SYNCHRONIZE
+          value: "true"
+        - name: TYPEORM_URL
+          value: "postgres://{{ .Values.META_DB_USERNAME }}:{{ .Values.META_DB_PASSWORD }}@{{ .Values.META_DB_HOST }}:{{ .Values.META_DB_PORT }}/{{ .Values.META_DB_DATABASE }}"
+        ports:
+          - containerPort: 3000

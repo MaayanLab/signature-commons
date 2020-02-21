@@ -4,7 +4,7 @@ export output=signature-commons
 
 mkdir -p "${output}"
 
-# Generate base kubernetes deployment with helm-chart-docker-compose
+# Generate base kubernetes deployments with helm-chart-docker-compose
 helm template --debug \
   helm-chart-docker-compose ./helm-chart-docker-compose/ \
   -f ../docker-compose.yml \
@@ -45,7 +45,7 @@ mkdir -p "${output}/templates"
 python3 -c "
 import os, re
 for content in map(str.strip, open(os.path.join('${output}', '${output}.yaml.stage3'), 'r').read().split('---')):
-  m = re.search('# Source: (.+)\n', content)
+  m = re.search('# Source!: (.+)\n', content)
   if m:
     filename = m.group(1)
     print(content, file=open(os.path.join('${output}', 'templates', os.path.basename(filename)), 'w'))

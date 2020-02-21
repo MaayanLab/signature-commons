@@ -1,36 +1,31 @@
-{{ $releaseName := .Release.Name }}
+{{ range $service, $val := .Values.services }}
+---
+# Source!: signature-commons/templates/deployment-{{ $service }}.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ $releaseName }}
-  labels:
-    app: {{ $releaseName }}
+  name: deployment-{{ $service }}
 spec:
-  {{- range $service, $val := .Values.services }}
   {{- range $labelKey, $labelVal := $val.labels }}
   {{- if eq $labelKey "helm.docker-compose.replicas" }}
   replicas: {{ $labelVal }}
-  {{- end}}
-  {{- end}}
-  {{- end}}   
+  {{- end }}
+  {{- end }}
   selector:
     matchLabels:
-      app: {{ $releaseName }}
+      workload.user.cattle.io/workloadselector: deployment-{{ $service }}
   template:
     metadata:
       labels:
-        app: {{ $releaseName }}
+        workload.user.cattle.io/workloadselector: deployment-{{ $service }}
     spec:
-      {{- range $service, $val := .Values.services }}
       {{- range $labelKey, $labelVal := $val.labels }}
       {{- if eq $labelKey "helm.docker-compose.imagePullSecret" }}
       imagePullSecrets:
       - name: {{ $labelVal }}
-      {{- end}}
-      {{- end}}
-      {{- end}}
+      {{- end }}
+      {{- end }}
       containers:
-      {{- range $service, $val := .Values.services }}
       - name: {{ $service }}
         image: {{ $val.image }}
         imagePullPolicy: Always
@@ -69,6 +64,6 @@ spec:
           {{- range $k, $v := $val.ports }}
             port: {{ splitList ":" $v | last }}
           {{- end }}
-        {{- end}}
-      {{end}}
-{{end}}
+        {{- end }}
+        {{- end }}
+{{ end }}
