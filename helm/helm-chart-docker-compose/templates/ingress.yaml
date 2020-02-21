@@ -10,9 +10,24 @@ spec:
 {{- if eq $labelKey "helm.docker-compose.tlsSecret" }}
   tls:
   - secretName: {{ $labelVal }}
-{{- end}}
-{{- end}}
-{{- end}}
-  backend:
-    serviceName: {{ .Release.Name }}
-    servicePort: 80
+{{- end }}
+{{- end }}
+{{- end }}
+  rules:
+  - host: "{{ `{{ .Values.SERVER_NAME }}` }}"
+    http:
+      paths:
+      {{- range $service, $val := .Values.services }}
+      {{- range $labelKey, $labelVal := $val.labels }}
+      {{- if eq $labelKey "helm.docker-compose.ingress.port" }}
+      - backend:
+          serviceName: {{ $service }}
+          servicePort: {{ $labelVal }}
+        {{- range $labelKey2, $labelVal2 := $val.labels }}
+        {{- if eq $labelKey2 "helm.docker-compose.ingress.prefix" }}
+        path: "{{ $labelVal2 }}"
+        {{- end }}
+        {{- end }}
+      {{- end }}
+      {{- end }}
+      {{- end }}

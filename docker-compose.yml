@@ -7,7 +7,9 @@ services:
       context: packages/ui
     image: maayanlab/sigcom:latest
     labels:
-      kompose.image-pull-policy: "Always"
+      helm.docker-compose.image-pull-policy: "Always"
+      helm.docker-compose.ingress.prefix: "${UI_PREFIX}"
+      helm.docker-compose.ingress.port: "80"
     restart: "on-failure"
     networks:
       internal:
@@ -27,7 +29,9 @@ services:
       context: packages/metadata-api
     image: maayanlab/signature-commons-metadata-api:latest
     labels:
-      kompose.image-pull-policy: "Always"
+      helm.docker-compose.image-pull-policy: "Always"
+      helm.docker-compose.ingress.prefix: "${META_API_PREFIX}"
+      helm.docker-compose.ingress.port: "3000"
     restart: "on-failure"
     networks:
       internal:
@@ -52,7 +56,9 @@ services:
       context: packages/data-api
     image: maayanlab/enrichmentapi:latest
     labels:
-      kompose.image-pull-policy: "Always"
+      helm.docker-compose.image-pull-policy: "Always"
+      helm.docker-compose.ingress.prefix: "${DATA_API_PREFIX}"
+      helm.docker-compose.ingress.port: "8080"
     restart: "on-failure"
     networks:
       internal:

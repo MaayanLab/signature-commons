@@ -36,6 +36,8 @@ spec:
         ports:
           - containerPort: 8080
       
+      
+      
 
       - name: data-db
         image: minio/minio
@@ -80,6 +82,8 @@ spec:
           value: "postgres://{{ .Values.META_DB_USERNAME }}:{{ .Values.META_DB_PASSWORD }}@{{ .Values.META_DB_HOST }}:{{ .Values.META_DB_PORT }}/{{ .Values.META_DB_DATABASE }}"
         ports:
           - containerPort: 3000
+      
+      
       
 
       - name: metadata-db

@@ -6,6 +6,19 @@ metadata:
   labels:
     app: signature-commons
 spec:
-  backend:
-    serviceName: signature-commons
-    servicePort: 80
+  rules:
+  - host: "{{ .Values.SERVER_NAME }}"
+    http:
+      paths:
+      - backend:
+          serviceName: data-api
+          servicePort: 8080
+        path: "{{ .Values.DATA_API_PREFIX }}"
+      - backend:
+          serviceName: metadata-api
+          servicePort: 3000
+        path: "{{ .Values.META_API_PREFIX }}"
+      - backend:
+          serviceName: ui
+          servicePort: 80
+        path: "{{ .Values.UI_PREFIX }}"
