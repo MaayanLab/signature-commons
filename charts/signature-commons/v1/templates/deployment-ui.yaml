@@ -20,6 +20,8 @@ spec:
         env:
         - name: NEXT_PUBLIC_DATA_API
           value: "{{ .Values.DATA_API_PREFIX }}"
+        - name: NEXT_PUBLIC_ENRICHR_URL
+          value: "{{ .Values.ENRICHR_API_PREFIX }}"
         - name: NEXT_PUBLIC_METADATA_API
           value: "{{ .Values.META_API_PREFIX }}"
         - name: PREFIX

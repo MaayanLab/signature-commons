@@ -19,6 +19,7 @@ services:
       PREFIX: "${UI_PREFIX}"
       NEXT_PUBLIC_METADATA_API: "${META_API_PREFIX}"
       NEXT_PUBLIC_DATA_API: "${DATA_API_PREFIX}"
+      NEXT_PUBLIC_ENRICHR_URL: "${ENRICHR_API_PREFIX}"
     ports:
       - "80"
 
