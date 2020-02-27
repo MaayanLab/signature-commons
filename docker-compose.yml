@@ -7,9 +7,9 @@ services:
       context: packages/ui
     image: maayanlab/sigcom:latest
     labels:
-      helm.docker-compose.image-pull-policy: "Always"
       helm.docker-compose.ingress.prefix: "${UI_PREFIX}"
       helm.docker-compose.ingress.port: "80"
+      helm.docker-compose.replicas: "${UI}"
     restart: "on-failure"
     networks:
       internal:
@@ -33,6 +33,7 @@ services:
       helm.docker-compose.image-pull-policy: "Always"
       helm.docker-compose.ingress.prefix: "${META_API_PREFIX}"
       helm.docker-compose.ingress.port: "3000"
+      helm.docker-compose.replicas: "${META_API}"
     restart: "on-failure"
     networks:
       internal:
@@ -60,6 +61,7 @@ services:
       helm.docker-compose.image-pull-policy: "Always"
       helm.docker-compose.ingress.prefix: "${DATA_API_PREFIX}"
       helm.docker-compose.ingress.port: "8080"
+      helm.docker-compose.replicas: "${DATA_API}"
     restart: "on-failure"
     networks:
       internal:

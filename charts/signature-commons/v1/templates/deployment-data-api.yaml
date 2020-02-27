@@ -5,6 +5,7 @@ kind: Deployment
 metadata:
   name: deployment-data-api
 spec:
+  replicas: {{ .Values.DATA_API }}
   selector:
     matchLabels:
       workload.user.cattle.io/workloadselector: deployment-data-api

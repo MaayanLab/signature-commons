@@ -5,6 +5,7 @@ kind: Deployment
 metadata:
   name: deployment-ui
 spec:
+  replicas: {{ .Values.UI }}
   selector:
     matchLabels:
       workload.user.cattle.io/workloadselector: deployment-ui

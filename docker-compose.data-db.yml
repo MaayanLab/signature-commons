@@ -3,6 +3,8 @@ version: "3"
 services:
   data-db:
     image: minio/minio
+    labels:
+      helm.docker-compose.replicas: "${DATA_DB}"
     restart: "on-failure"
     entrypoint:
     - /bin/sh

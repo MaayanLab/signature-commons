@@ -3,6 +3,8 @@ version: "3"
 services:
   metadata-db:
     image: postgres:11
+    labels:
+      helm.docker-compose.replicas: "${META_DB}"
     restart: "on-failure"
     networks:
       internal:

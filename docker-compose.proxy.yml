@@ -8,8 +8,7 @@ services:
       context: packages/proxy
     image: maayanlab/proxy:1.1.2
     labels:
-      kompose.image-pull-policy: "Always"
-      kompose.service.expose: "true"
+      helm.docker-compose.replicas: "${PROXY}"
     restart: "on-failure"
     networks:
       default:
