@@ -6,7 +6,7 @@ services:
   proxy:
     build:
       context: packages/proxy
-    image: maayanlab/proxy:1.1.2
+    image: maayanlab/proxy:1.1.3
     labels:
       kompose.image-pull-policy: "Always"
       kompose.service.expose: "true"
@@ -18,9 +18,9 @@ services:
           - proxy
     environment:
       nginx_server_name: "${SERVER_NAME}"
-      nginx_proxy_00: "${UI_PREFIX}(|/.*) http://ui:80${UI_PREFIX}$$1"
-      nginx_proxy_01: "${META_API_PREFIX}(|/.*) http://metadata-api:3000${META_API_PREFIX}$$1"
-      nginx_proxy_02: "${DATA_API_PREFIX}(|/.*) http://data-api:8080${DATA_API_PREFIX}$$1"
+      nginx_proxy_00: "${META_API_PREFIX}(/.*) http://metadata-api:3000${META_API_PREFIX}$$1"
+      nginx_proxy_01: "${DATA_API_PREFIX}(/.*) http://data-api:8080${DATA_API_PREFIX}$$1"
+      nginx_proxy_02: "${UI_PREFIX}(/.*) http://ui:80${UI_PREFIX}$$1"
     ports:
       - 80:80
       # - 443:443
