@@ -44,7 +44,7 @@ services:
       DEBUG: "${META_API_DEBUG}"
       NODE_OPTIONS: "--max_old_space_size=4096"
       PREFIX: "${META_API_PREFIX}"
-      TYPEORM_MIGRATIONS_RUN: "false"
+      TYPEORM_MIGRATIONS_RUN: "true"
       TYPEORM_SYNCHRONIZE: "true"
       TYPEORM_LOGGING: "true"
       TYPEORM_URL: "postgres://${META_DB_USERNAME}:${META_DB_PASSWORD}@${META_DB_HOST}:${META_DB_PORT}/${META_DB_DATABASE}"
@@ -73,6 +73,7 @@ services:
       AWS_SECRET_ACCESS_KEY: "${DATA_DB_SECRET_KEY}"
       AWS_BUCKET: "${DATA_DB_BUCKET}"
       AWS_ENDPOINT_URL: "${DATA_DB_ENDPOINT}"
+      S3_AUTOLOAD: "true"
     ports:
       - "8080"
 
