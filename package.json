@@ -1,0 +1,16 @@
+{
+  "name": "root",
+  "private": true,
+  "scripts": {
+    "start:metadata-db": "docker-compose up -d metadata-db",
+    "start:data-db": "docker-compose up -d data-db",
+    "start:db": "npm run start:metadata-db && npm run start:data-db",
+    "start:metadata-api": "dotenv-load 'cd packages/metadata-api && npm run start'",
+    "start:data-api": "dotenv-load 'cd packages/data-api && gradle tomcatRun'",
+    "start:ui": "dotenv-load 'cd packages/ui && npm run dev -- -p 5000'"
+  },
+  "devDependencies": {
+    "dotenv-load": "^2.0.0",
+    "lerna": "^3.13.4"
+  }
+}

@@ -4,8 +4,9 @@ services:
   # Front-end to entire framework proxy API connections
   #  and potentially handle load balancing in the future.
   proxy:
-    build: ./proxy
-    image: maayanlab/signature-commons-proxy
+    build:
+      context: packages/proxy
+    image: maayanlab/proxy:1.1.1
     networks:
       default:
       internal:
@@ -13,17 +14,24 @@ services:
           - proxy
     environment:
       nginx_server_name: localhost
-      nginx_proxy_00: "/sigcom-dev/ http://ui:80/sigcom-dev/"
-      nginx_proxy_03: "/signature-commons-metadata-api/ http://metadata-api:3000/signature-commons-metadata-api/"
-      nginx_proxy_04: "/enrichmentapi/ http://data-api:8080/enrichmentapi/"
-      nginx_redirect_00: "/sigcom/ /sigcom-dev/"
+      nginx_proxy_00: "/sigcom/?(.*) http://ui:80/sigcom/$$1"
+      nginx_proxy_03: "/signature-commons-metadata-api/?(.*) http://metadata-api:3000/signature-commons-metadata-api/$$1"
+      nginx_proxy_04: "/enrichmentapi/?(.*) http://data-api:8080/enrichmentapi/$$1"
     ports:
       - 80:80
       # - 443:443
 
   # UI rendering, facilitates integration of metadata and data apis
   ui:
-    image: maayanlab/sigcom-dev
+    build:
+      context: packages/ui
+    image: maayanlab/sigcom-dev:0.2.22
+    environment:
+      PREFIX: /sigcom
+      # NOTE: These should reflect the urls you would access in browser
+      NEXT_PUBLIC_METADATA_API: /signature-commons-metadata-api
+      NEXT_PUBLIC_DATA_API: /enrichmentapi
+      NEXT_PUBLIC_ENRICHR_URL: https://amp.pharm.mssm.edu/Enrichr
     networks:
       internal:
         aliases:
@@ -32,6 +40,8 @@ services:
   # Metadata API, facilitates json-validatable
   #  database interactions with metadata postgresql DB
   metadata-api:
+    build:
+      context: packages/metadata-api
     image: maayanlab/signature-commons-metadata-api
     networks:
       internal:
@@ -52,6 +62,8 @@ services:
 
   # Data API, facilitates efficient data-level analysis
   data-api:
+    build:
+      context: packages/data-api
     image: maayanlab/enrichmentapi
     networks:
       internal:
@@ -68,7 +80,12 @@ services:
   
   data-db:
     image: minio/minio
-    command: "server /data"
+    entrypoint: /bin/sh
+    command: >
+      -c "
+      mkdir -p /data/$${MINIO_BUCKET};
+      minio server /data;
+      exit 0"
     networks:
       internal:
         aliases:
@@ -77,35 +94,18 @@ services:
     # environment:
       # MINIO_ACCESS_KEY: yourawsaccesskey
       # MINIO_SECRET_KEY: yourawssecret
+      # MINIO_BUCKET: yourbucket
     ports:
       - 9000:9000
     volumes:
       - .minio:/root/.minio
       - data-db:/data
 
-  # This can be used as a cli to access minio via command line
-  #  with docker-compose run data-db-cli /bin/sh
-  #  the host will be configured under the name minio: (e.g. `mc ls minio`)
-  data-db-cli:
-    build: ./minio/init
-    image: maayanlab/signature-commons-data-db-init
-    networks:
-      internal:
-    env_file: .env
-    environment:
-      S3_ENDPOINT: http://data-db:9000
-      # S3_BUCKET: yourbucket
-      # MINIO_ACCESS_KEY: yourawsaccesskey
-      # MINIO_SECRET_KEY: yourawssecret
-    links:
-      - data-db
-
   # NOTE: If databases are stored elsewhere, they just need to be
   #  configured via the environment variables and commented out in this file.
   # Metadata database, underlying store of metadata
   metadata-db:
-    build: ./metadata-db
-    image: maayanlab/metadata-db
+    image: postgres:11
     networks:
       internal:
         aliases:

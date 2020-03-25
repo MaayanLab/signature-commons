@@ -8,28 +8,21 @@ It uses an nginx proxy to proxy connections from the outside world to the docker
 
 It can also optionally host the signature commons metadata database.
 
-## .env
+## Using this repo
+This is a mono-repo for all of the signature commons applications. It uses `git submodules` to organize the separate repositories into one and `lerna` for linking together javascript related dependencies. Cloning the repository and all the submodules can be done with:
 
-The docker-compose.yml file is annotated with the relevant environment variables which are necessary--but here is the skeleton of a `.env` file.
-
-```conf
-ADMIN_PASSWORD=signaturestore
-ADMIN_USERNAME=signaturestore
-POSTGRES_USER=signaturestore
-POSTGRES_PASSWORD=signaturestore
-TYPEORM_CONNECTION=postgres
-TYPEORM_URL=postgresql://signaturestore:signaturestore@metadata-db:5432/signaturestore
-TYPEORM_SYNCHRONIZE=true
-TYPEORM_MIGRATIONS_RUN=true
-TYPEORM_ENTITIES=dist/src/entities/*.js
-TYPEORM_MIGRATIONS=dist/src/migration/*.js
-TYPEORM_SUBSCRIBERS=dist/src/subscriber/*.js
-TOKEN=yourtoken
-AWS_ACCESS_KEY_ID=yourawsaccesskey
-AWS_SECRET_ACCESS_KEY=yourawssecret
-AWS_BUCKET=yourbucket
-S3_BUCKET=yourbucket
+```bash
+git clone --recurse-submodules git@github.com:dcic/signature-commons.git
 ```
+
+If you already have it cloned, you can get all the submodules with:
+```bash
+git submodule update --init --recursive
+```
+
+## .env
+Many aspects of the application can be configured via environment variables--copy `.env.example` to `.env` and modify as needed.
+
 
 ## Refreshing APIs
 Metadata DB: Trigger the API to refresh the cached views/indecies

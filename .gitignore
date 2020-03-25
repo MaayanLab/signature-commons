@@ -1,5 +1,7 @@
 __pycache__
 .DS_Store
 .env
+.minio
 .vscode
+node_modules
 venv
