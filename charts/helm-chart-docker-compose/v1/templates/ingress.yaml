@@ -1,0 +1,25 @@
+{{ range $service, $val := .Values.services }}
+{{- range $labelKeyPort, $labelValPort := $val.labels }}
+{{- if eq $labelKeyPort "helm.docker-compose.ingress.port" }}
+{{- range $labelKeyPrefix, $labelValPrefix := $val.labels }}
+{{- if eq $labelKeyPrefix "helm.docker-compose.ingress.prefix" }}
+---
+# Source!: signature-commons/templates/ingress-{{ $service }}.yaml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-{{ $service }}
+spec:
+  rules:
+  - host: "{{ `{{ .Values.SERVER_NAME }}` }}"
+    http:
+      paths:
+      - backend:
+          serviceName: {{ $service }}
+          servicePort: {{ $labelValPort }}
+        path: "{{ $labelValPrefix }}"
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{ end }}

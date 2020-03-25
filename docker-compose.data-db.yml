@@ -1,0 +1,36 @@
+version: "3"
+
+services:
+  data-db:
+    image: minio/minio
+    restart: "on-failure"
+    entrypoint:
+    - /bin/sh
+    command:
+    - -c
+    - >
+      mkdir -p /data/$$MINIO_BUCKET;
+      minio server /data;
+      exit 0
+    networks:
+      internal:
+        aliases:
+          - data-db
+    env_file: .env
+    environment:
+      MINIO_ACCESS_KEY: ${DATA_DB_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${DATA_DB_SECRET_KEY}
+      MINIO_BUCKET: ${DATA_DB_BUCKET}
+    ports:
+      - 9000:9000
+    volumes:
+      - .minio:/root/.minio
+      - data-db:/data
+
+# Internal volumes
+volumes:
+  data-db:
+
+# Internal docker networks
+networks:
+  internal:

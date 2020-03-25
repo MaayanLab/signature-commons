@@ -1,0 +1,69 @@
+{{ range $service, $val := .Values.services }}
+---
+# Source!: signature-commons/templates/deployment-{{ $service }}.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-{{ $service }}
+spec:
+  {{- range $labelKey, $labelVal := $val.labels }}
+  {{- if eq $labelKey "helm.docker-compose.replicas" }}
+  replicas: {{ $labelVal }}
+  {{- end }}
+  {{- end }}
+  selector:
+    matchLabels:
+      workload.user.cattle.io/workloadselector: deployment-{{ $service }}
+  template:
+    metadata:
+      labels:
+        workload.user.cattle.io/workloadselector: deployment-{{ $service }}
+    spec:
+      {{- range $labelKey, $labelVal := $val.labels }}
+      {{- if eq $labelKey "helm.docker-compose.imagePullSecret" }}
+      imagePullSecrets:
+      - name: {{ $labelVal }}
+      {{- end }}
+      {{- end }}
+      containers:
+      - name: {{ $service }}
+        image: {{ $val.image }}
+        imagePullPolicy: Always
+        {{- if $val.entrypoint }}
+        command:
+        {{- range $key, $value := $val.entrypoint }}
+        - {{ $value }}
+        {{- end }}
+        {{- end }}
+        {{- if $val.command }}
+        args:
+        {{- range $key, $value := $val.command }}
+        - {{ $value }}
+        {{- end }}
+        {{- end }}
+        env:
+        {{- range $key, $value := $val.environment }}
+        - name: {{ $key }}
+          value: "{{ $value }}"
+        {{-  end }}
+        ports:
+        {{- range $k, $v := $val.ports }}
+          - containerPort: {{ splitList ":" $v | last }}
+        {{- end }}
+        {{- range $key, $value := $val.labels }}
+        {{- if eq $key "helm.docker-compose.healthcheck" }}
+        livenessProbe:
+          httpGet:
+            path: {{ $value }}
+          {{- range $k, $v := $val.ports }}
+            port: {{ splitList ":" $v | last }}
+          {{- end }}
+        readinessProbe:
+          httpGet:
+            path: {{ $value }}
+          {{- range $k, $v := $val.ports }}
+            port: {{ splitList ":" $v | last }}
+          {{- end }}
+        {{- end }}
+        {{- end }}
+{{ end }}

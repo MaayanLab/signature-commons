@@ -1,0 +1,15 @@
+# Source: signature-commons/templates/ingress.yaml
+# Source!: signature-commons/templates/ingress-data-api.yaml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-data-api
+spec:
+  rules:
+  - host: "{{ .Values.SERVER_NAME }}"
+    http:
+      paths:
+      - backend:
+          serviceName: data-api
+          servicePort: 8080
+        path: "{{ .Values.DATA_API_PREFIX }}"

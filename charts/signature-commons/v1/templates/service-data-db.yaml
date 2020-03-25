@@ -1,0 +1,14 @@
+# Source: signature-commons/templates/service.yaml
+# Source!: signature-commons/templates/service-data-db.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: "data-db"
+spec:
+  type: NodePort
+  ports:
+  - name: "9000"
+    port: 9000
+    targetPort: 9000
+  selector:
+    workload.user.cattle.io/workloadselector: "deployment-data-db"

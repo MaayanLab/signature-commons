@@ -1,0 +1,110 @@
+questions:
+- variable: SERVER_NAME
+  type: string
+  required: true
+  group: Ingress
+  label: Server Name
+  description: "The hostname to expose sigcom under"
+- variable: UI_PREFIX
+  type: string
+  required: true
+  default: /sigcom
+  group: Ingress
+  description: "The prefix for the UI"
+- variable: META_API_PREFIX
+  type: string
+  required: true
+  default: /sigcom-metadata-api
+  group: Ingress
+  description: "The prefix for the metadata API"
+- variable: DATA_API_PREFIX
+  type: string
+  required: true
+  default: /sigcom-data-api
+  group: Ingress
+  description: "The prefix for the data API"
+- variable: META_API_USERNAME
+  type: string
+  required: true
+  default: signaturestore
+  group: "Metadata API"
+  description: "The username to administrate the metadata API"
+- variable: META_API_PASSWORD
+  type: password
+  default: signaturestore
+  required: true
+  group: "Metadata API"
+  description: "The password to administrate the metadata API"
+- variable: META_API_DEBUG
+  type: string
+  group: "Metadata API"
+  description: "The debugging prefix (* for super verbose debugging)"
+- variable: DATA_API_TOKEN
+  type: password
+  default: signaturestore
+  required: true
+  group: "Data API"
+  description: "The API token to administrate the data API"
+- variable: DATA_DB
+  type: boolean
+  default: true
+  required: true
+  group: "Data DB"
+  description: "Whether or not to create a local S3 server for the Data DB"
+- variable: DATA_DB_ENDPOINT
+  type: string
+  default: http://data-db:9000
+  required: true
+  group: "Data DB"
+  description: "The URI to S3"
+- variable: DATA_DB_ACCESS_KEY
+  label: S3 Access Key
+  type: string
+  required: true
+  default: signaturestore
+  group: "Data DB"
+  description: "The S3 Access Key"
+- variable: DATA_DB_SECRET_KEY
+  label: S3 Secret Key
+  type: password
+  required: true
+  default: signaturestore
+  group: "Data DB"
+  description: "The S3 Secret Key"
+- variable: DATA_DB_BUCKET
+  label: S3 Bucket
+  type: string
+  default: signaturestore
+  group: "Data DB"
+  description: "The S3 Bucket"
+- variable: META_DB
+  type: boolean
+  default: true
+  required: true
+  group: "Meta DB"
+  description: "Whether or not to create a local postgres server for the Meta DB"
+- variable: META_DB_HOST
+  type: string
+  default: metadata-db
+  required: true
+  group: "Meta DB"
+- variable: META_DB_PORT
+  type: int
+  default: 5432
+  required: true
+  group: "Meta DB"
+- variable: META_DB_USERNAME
+  type: string
+  default: signaturestore
+  required: true
+  group: "Meta DB"
+- variable: META_DB_PASSWORD
+  type: password
+  default: signaturestore
+  required: true
+  group: "Meta DB"
+- variable: META_DB_DATABASE
+  type: string
+  default: signaturestore
+  required: true
+  group: "Meta DB"
