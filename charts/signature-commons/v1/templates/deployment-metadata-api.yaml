@@ -28,10 +28,12 @@ spec:
           value: "--max_old_space_size=4096"
         - name: PREFIX
           value: "{{ .Values.META_API_PREFIX }}"
+        - name: REFRESH_ON_STARTUP
+          value: "true"
         - name: TYPEORM_LOGGING
           value: "true"
         - name: TYPEORM_MIGRATIONS_RUN
-          value: "false"
+          value: "true"
         - name: TYPEORM_SYNCHRONIZE
           value: "true"
         - name: TYPEORM_URL

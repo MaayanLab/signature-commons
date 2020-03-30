@@ -28,6 +28,8 @@ spec:
           value: "{{ .Values.DATA_DB_SECRET_KEY }}"
         - name: PREFIX
           value: "{{ .Values.DATA_API_PREFIX }}"
+        - name: S3_AUTOLOAD
+          value: "true"
         - name: TOKEN
           value: "{{ .Values.DATA_API_TOKEN }}"
         - name: deployment
