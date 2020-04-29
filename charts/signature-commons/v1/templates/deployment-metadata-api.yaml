@@ -26,6 +26,8 @@ spec:
           value: "{{ .Values.META_API_DEBUG }}"
         - name: NODE_OPTIONS
           value: "--max_old_space_size=4096"
+        - name: OPENAPI_TITLE
+          value: "{{ .Values.META_API_TITLE }}"
         - name: PREFIX
           value: "{{ .Values.META_API_PREFIX }}"
         - name: REFRESH_ON_STARTUP

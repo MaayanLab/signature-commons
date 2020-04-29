@@ -44,6 +44,7 @@ services:
       DEBUG: "${META_API_DEBUG}"
       NODE_OPTIONS: "--max_old_space_size=4096"
       PREFIX: "${META_API_PREFIX}"
+      OPENAPI_TITLE: "${META_API_TITLE}"
       REFRESH_ON_STARTUP: "true"
       TYPEORM_MIGRATIONS_RUN: "true"
       TYPEORM_SYNCHRONIZE: "true"
