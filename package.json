@@ -8,7 +8,7 @@
     "start:db": "npm run start:metadata-db && npm run start:data-db",
     "start:metadata-api:dev": "dotenv-load 'cd packages/metadata-api && npm run start'",
     "start:metadata-api:production": "dotenv-load 'docker-compose -f docker-compose.yml up -d metadata-api'",
-    "start:metadata-db": "dotenv-load 'docker-compose -f docker-compose.yml up -f docker-compose.metadata-db.yml -d metadata-db'",
+    "start:metadata-db": "dotenv-load 'docker-compose -f docker-compose.yml -f docker-compose.metadata-db.yml up -d metadata-db'",
     "start:production:complete": "dotenv-load 'docker-compose -f docker-compose.yml -f docker-compose.metadata-db.yml -f docker-compose.data-db.yml -f docker-compose.proxy.yml up -d'",
     "start:production": "dotenv-load 'docker-compose -f docker-compose.yml -f docker-compose.proxy.yml up -d'",
     "start:ui:dev": "dotenv-load 'cd packages/ui && npm run dev -- -p 5000'",
