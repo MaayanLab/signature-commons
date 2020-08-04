@@ -4,6 +4,9 @@ services:
   data-db:
     image: minio/minio
     restart: "on-failure"
+    labels:
+      helm.docker-compose.toggle-active: "DATA_DB"
+      helm.docker-compose.image-pull-policy: "Always"
     entrypoint:
     - /bin/sh
     command:

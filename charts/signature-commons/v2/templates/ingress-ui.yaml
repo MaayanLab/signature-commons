@@ -1,0 +1,17 @@
+# Source: signature-commons/templates/ingress.yaml
+# Source!: signature-commons/templates/ingress-ui.yaml
+{{ if ne .Values.UI "false" }}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-ui
+spec:
+  rules:
+  - host: "{{ .Values.SERVER_NAME }}"
+    http:
+      paths:
+      - backend:
+          serviceName: ui
+          servicePort: 80
+        path: "{{ .Values.UI_PREFIX }}"
+{{ end }}

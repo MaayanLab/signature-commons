@@ -1,0 +1,17 @@
+# Source: signature-commons/templates/ingress.yaml
+# Source!: signature-commons/templates/ingress-metadata-api.yaml
+{{ if ne .Values.META_API "false" }}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-metadata-api
+spec:
+  rules:
+  - host: "{{ .Values.SERVER_NAME }}"
+    http:
+      paths:
+      - backend:
+          serviceName: metadata-api
+          servicePort: 3000
+        path: "{{ .Values.META_API_PREFIX }}"
+{{ end }}

@@ -1,0 +1,40 @@
+# Source: signature-commons/templates/deployment.yaml
+# Source!: signature-commons/templates/deployment-data-api.yaml
+{{ if ne .Values.DATA_API "false" }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-data-api
+spec:
+  selector:
+    matchLabels:
+      workload.user.cattle.io/workloadselector: deployment-data-api
+  template:
+    metadata:
+      labels:
+        workload.user.cattle.io/workloadselector: deployment-data-api
+    spec:
+      containers:
+      - name: data-api
+        image: maayanlab/enrichmentapi:latest
+        imagePullPolicy: Always
+        env:
+        - name: AWS_ACCESS_KEY_ID
+          value: "{{ .Values.DATA_DB_ACCESS_KEY }}"
+        - name: AWS_BUCKET
+          value: "{{ .Values.DATA_DB_BUCKET }}"
+        - name: AWS_ENDPOINT_URL
+          value: "{{ .Values.DATA_DB_ENDPOINT }}"
+        - name: AWS_SECRET_ACCESS_KEY
+          value: "{{ .Values.DATA_DB_SECRET_KEY }}"
+        - name: PREFIX
+          value: "{{ .Values.DATA_API_PREFIX }}"
+        - name: S3_AUTOLOAD
+          value: "true"
+        - name: TOKEN
+          value: "{{ .Values.DATA_API_TOKEN }}"
+        - name: deployment
+          value: "marathon_deployed"
+        ports:
+          - containerPort: 8080
+{{ end }}

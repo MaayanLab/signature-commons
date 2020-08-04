@@ -1,0 +1,29 @@
+SERVER_NAME: "localhost"
+
+UI: "true"
+UI_PREFIX: ""
+META_API_PREFIX: "/sigcom-metadata-api"
+DATA_API_PREFIX: "/sigcom-data-api"
+ENRICHR_API_PREFIX: "https://amp.pharm.mssm.edu/Enrichr"
+
+DATA_API: "true"
+DATA_API_TOKEN: "signaturestore"
+
+DATA_DB: "true"
+DATA_DB_ACCESS_KEY: "signaturestore"
+DATA_DB_SECRET_KEY: "signaturestore"
+DATA_DB_BUCKET: "signaturestore"
+DATA_DB_ENDPOINT: "http://data-db:9000"
+
+META_API: "true"
+META_API_USERNAME: "signaturestore"
+META_API_PASSWORD: "signaturestore"
+META_API_TITLE: ""
+META_API_DEBUG: ""
+
+META_DB: "true"
+META_DB_HOST: "metadata-db"
+META_DB_PORT: "5432"
+META_DB_USERNAME: "signaturestore"
+META_DB_PASSWORD: "signaturestore"
+META_DB_DATABASE: "signaturestore"

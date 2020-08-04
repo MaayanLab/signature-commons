@@ -1,0 +1,16 @@
+# Source: signature-commons/templates/service.yaml
+# Source!: signature-commons/templates/service-metadata-db.yaml
+{{ if ne .Values.META_DB "false" }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: "metadata-db"
+spec:
+  type: NodePort
+  ports:
+  - name: "5432"
+    port: 5432
+    targetPort: 5432
+  selector:
+    workload.user.cattle.io/workloadselector: "deployment-metadata-db"
+{{ end }}

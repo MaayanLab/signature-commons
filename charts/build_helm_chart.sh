@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 export output=signature-commons
-export version=v1
+export version=v2
 
-mkdir -p "${output}"
+mkdir -p "${output}/${version}"
 
 # Generate base kubernetes deployments with helm-chart-docker-compose
 helm template --debug \
@@ -15,7 +15,7 @@ helm template --debug \
 
 # Generate values.yaml with .env.example
 sed \
-  -e 's/^\([^=]\+\)=\(.*\)$/\1: \2/g' \
+  -e 's/^\([^=]\+\)=\(.*\)$/\1: "\2"/g' \
   < ../.env.example \
   > "${output}/${version}/values.yaml"
 
@@ -49,7 +49,12 @@ for content in map(str.strip, open(os.path.join('${output}', '${version}', '${ou
   m = re.search('# Source!: (.+)\n', content)
   if m:
     filename = m.group(1)
-    print(content, file=open(os.path.join('${output}', '${version}', 'templates', os.path.basename(filename)), 'w'))
+    with open(os.path.join('${output}', '${version}', 'templates', os.path.basename(filename)), 'w') as fw:
+      for line in content.splitlines():
+        if line.startswith('#!'):
+          print(line[2:], file=fw)
+        else:
+          print(line, file=fw)
 "
 
 # Add README

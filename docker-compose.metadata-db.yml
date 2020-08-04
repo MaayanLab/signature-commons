@@ -4,6 +4,9 @@ services:
   metadata-db:
     image: postgres:11
     restart: "on-failure"
+    labels:
+      helm.docker-compose.toggle-active: "META_DB"
+      helm.docker-compose.image-pull-policy: "Always"
     networks:
       internal:
         aliases:

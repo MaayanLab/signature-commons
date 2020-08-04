@@ -1,0 +1,16 @@
+# Source: signature-commons/templates/service.yaml
+# Source!: signature-commons/templates/service-metadata-api.yaml
+{{ if ne .Values.META_API "false" }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: "metadata-api"
+spec:
+  type: NodePort
+  ports:
+  - name: "3000"
+    port: 3000
+    targetPort: 3000
+  selector:
+    workload.user.cattle.io/workloadselector: "deployment-metadata-api"
+{{ end }}

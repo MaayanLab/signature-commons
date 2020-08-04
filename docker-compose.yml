@@ -7,6 +7,7 @@ services:
       context: packages/ui
     image: maayanlab/sigcom:latest
     labels:
+      helm.docker-compose.toggle-active: "UI"
       helm.docker-compose.image-pull-policy: "Always"
       helm.docker-compose.ingress.prefix: "${UI_PREFIX}"
       helm.docker-compose.ingress.port: "80"
@@ -28,8 +29,9 @@ services:
   metadata-api:
     build:
       context: packages/metadata-api
-    image: maayanlab/signature-commons-metadata-api:latest
+    image: maayanlab/signature-commons-metadata-api
     labels:
+      helm.docker-compose.toggle-active: "META_API"
       helm.docker-compose.image-pull-policy: "Always"
       helm.docker-compose.ingress.prefix: "${META_API_PREFIX}"
       helm.docker-compose.ingress.port: "3000"
@@ -59,6 +61,7 @@ services:
       context: packages/data-api
     image: maayanlab/enrichmentapi:latest
     labels:
+      helm.docker-compose.toggle-active: "DATA_API"
       helm.docker-compose.image-pull-policy: "Always"
       helm.docker-compose.ingress.prefix: "${DATA_API_PREFIX}"
       helm.docker-compose.ingress.port: "8080"

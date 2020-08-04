@@ -1,0 +1,30 @@
+# Source: signature-commons/templates/deployment.yaml
+# Source!: signature-commons/templates/deployment-metadata-db.yaml
+{{ if ne .Values.META_DB "false" }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-metadata-db
+spec:
+  selector:
+    matchLabels:
+      workload.user.cattle.io/workloadselector: deployment-metadata-db
+  template:
+    metadata:
+      labels:
+        workload.user.cattle.io/workloadselector: deployment-metadata-db
+    spec:
+      containers:
+      - name: metadata-db
+        image: postgres:11
+        imagePullPolicy: Always
+        env:
+        - name: POSTGRES_DATABASE
+          value: "{{ .Values.META_DB_DATABASE }}"
+        - name: POSTGRES_PASSWORD
+          value: "{{ .Values.META_DB_PASSWORD }}"
+        - name: POSTGRES_USER
+          value: "{{ .Values.META_DB_USERNAME }}"
+        ports:
+          - containerPort: 5432
+{{ end }}

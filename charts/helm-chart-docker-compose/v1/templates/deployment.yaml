@@ -1,6 +1,11 @@
 {{ range $service, $val := .Values.services }}
 ---
 # Source!: signature-commons/templates/deployment-{{ $service }}.yaml
+{{- range $labelKeyActive, $labelValActive := $val.labels }}
+{{- if eq $labelKeyActive "helm.docker-compose.toggle-active" }}
+{{`#!{{ if ne .Values.`}}{{ $labelValActive }}{{` "false" }}`}}
+{{- end }}
+{{- end }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -66,4 +71,9 @@ spec:
           {{- end }}
         {{- end }}
         {{- end }}
+{{- range $labelKeyActive, $labelValActive := $val.labels }}
+{{- if eq $labelKeyActive "helm.docker-compose.toggle-active" }}
+{{ `#!{{ end }}` }}
+{{- end }}
+{{- end }}
 {{ end }}
