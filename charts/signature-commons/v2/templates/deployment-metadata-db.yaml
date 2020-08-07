@@ -1,6 +1,6 @@
 # Source: signature-commons/templates/deployment.yaml
 # Source!: signature-commons/templates/deployment-metadata-db.yaml
-{{ if ne .Values.META_DB "false" }}
+{{ if ne .Values.META_DB false }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:

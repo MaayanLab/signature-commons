@@ -1,6 +1,6 @@
 # Source: signature-commons/templates/deployment.yaml
 # Source!: signature-commons/templates/deployment-ui.yaml
-{{ if ne .Values.UI "false" }}
+{{ if ne .Values.UI false }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:

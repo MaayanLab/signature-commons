@@ -1,6 +1,6 @@
 # Source: signature-commons/templates/service.yaml
 # Source!: signature-commons/templates/service-data-db.yaml
-{{ if ne .Values.DATA_DB "false" }}
+{{ if ne .Values.DATA_DB false }}
 apiVersion: v1
 kind: Service
 metadata:

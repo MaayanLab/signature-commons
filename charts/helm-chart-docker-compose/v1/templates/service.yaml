@@ -3,7 +3,7 @@
 # Source!: signature-commons/templates/service-{{ $service }}.yaml
 {{- range $labelKeyActive, $labelValActive := $val.labels }}
 {{- if eq $labelKeyActive "helm.docker-compose.toggle-active" }}
-{{`#!{{ if ne .Values.`}}{{ $labelValActive }}{{` "false" }}`}}
+{{`#!{{ if ne .Values.`}}{{ $labelValActive }}{{` false }}`}}
 {{- end }}
 {{- end }}
 apiVersion: v1

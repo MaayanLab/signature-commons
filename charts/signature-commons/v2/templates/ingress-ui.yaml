@@ -1,6 +1,6 @@
 # Source: signature-commons/templates/ingress.yaml
 # Source!: signature-commons/templates/ingress-ui.yaml
-{{ if ne .Values.UI "false" }}
+{{ if ne .Values.UI false }}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:

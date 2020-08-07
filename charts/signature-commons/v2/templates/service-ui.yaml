@@ -1,6 +1,6 @@
 # Source: signature-commons/templates/service.yaml
 # Source!: signature-commons/templates/service-ui.yaml
-{{ if ne .Values.UI "false" }}
+{{ if ne .Values.UI false }}
 apiVersion: v1
 kind: Service
 metadata:

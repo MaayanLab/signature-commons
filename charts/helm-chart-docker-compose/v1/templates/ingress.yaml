@@ -7,7 +7,7 @@
 # Source!: signature-commons/templates/ingress-{{ $service }}.yaml
 {{- range $labelKeyActive, $labelValActive := $val.labels }}
 {{- if eq $labelKeyActive "helm.docker-compose.toggle-active" }}
-{{`#!{{ if ne .Values.`}}{{ $labelValActive }}{{` "false" }}`}}
+{{`#!{{ if ne .Values.`}}{{ $labelValActive }}{{` false }}`}}
 {{- end }}
 {{- end }}
 apiVersion: extensions/v1beta1

@@ -1,10 +1,4 @@
 questions:
-- variable: UI
-  type: boolean
-  default: true
-  required: true
-  group: "UI"
-  description: "Whether or not to create a UI"
 - variable: SERVER_NAME
   type: string
   required: true
@@ -29,6 +23,12 @@ questions:
   default: /sigcom-data-api
   group: Ingress
   description: "The prefix for the data API"
+- variable: UI
+  type: boolean
+  default: true
+  required: true
+  group: "UI"
+  description: "Whether or not to create a UI"
 - variable: META_API
   type: boolean
   default: true
