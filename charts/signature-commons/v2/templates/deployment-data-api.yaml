@@ -23,6 +23,8 @@ spec:
           value: "{{ .Values.DATA_DB_ACCESS_KEY }}"
         - name: AWS_BUCKET
           value: "{{ .Values.DATA_DB_BUCKET }}"
+        - name: AWS_BUCKET_PREFIX
+          value: "{{ .Values.DATA_DB_BUCKET_PREFIX }}"
         - name: AWS_ENDPOINT_URL
           value: "{{ .Values.DATA_DB_ENDPOINT }}"
         - name: AWS_SECRET_ACCESS_KEY
